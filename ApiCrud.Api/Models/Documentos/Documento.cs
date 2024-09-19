@@ -13,11 +13,11 @@ namespace ApiCrud.Models
     public class Documento
     {
         [Key]
-        public int IdDocumento { get; init; }
+        public int IdDocumento { get; set; }
 
         [Required]
         [MaxLength(255)]
-        public string? Nome { get; private set; }
+        public string? Nome { get;  set; }
 
         [MaxLength(255)]
         public string? Descricao { get; set; }
@@ -48,10 +48,9 @@ namespace ApiCrud.Models
 
 
         // Construtor
-        public Documento(int idocumento, string nome, string descricao, DateTime dataUpload, string caminho, string versaoatual, string categoria, int usuarioid)
+        public Documento(string nome, string descricao, DateTime dataUpload, string caminho, string versaoatual, string categoria, int usuarioid)
         {
             this.Nome = nome;
-            this.IdDocumento = idocumento;
             this.Descricao = descricao;
             this.DataUpload = dataUpload;
             this.Status = Status.Ativo;
@@ -61,7 +60,7 @@ namespace ApiCrud.Models
             this.UsuarioId = usuarioid;
         }
 
-        public void Inativar()
+        public void Desativar()
         {
             this.Status = Status.Inativo;
         }

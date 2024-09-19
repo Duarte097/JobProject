@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiCrud.Models
 {
+ 
     public class UsuarioModel
     {
         [Key]
@@ -27,6 +28,8 @@ namespace ApiCrud.Models
         [MaxLength(50)]
         public string? Papel { get; set; }
         public DateTime? Datacriacao { get; set; }
+
+        public bool Ativo { get; set; }
         public virtual ICollection<Documento> Documentos { get; set; } = new List<Documento>();
         public virtual ICollection<Permissao> Permissoes { get; set; } = new List<Permissao>();
 
@@ -37,7 +40,13 @@ namespace ApiCrud.Models
             this.SenhaHash = senhaHash;
             this.Papel = papel;
             this.Datacriacao = datacriacao;
+            Ativo = true;
         }
         public UsuarioModel() { }
+
+        public void Desativar()
+        {
+            Ativo = false;
+        }
     }
 }

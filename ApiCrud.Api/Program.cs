@@ -24,7 +24,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.MapGet("Hello-World", () => "Hello World");
+
+
 
 //Configurando as rotas
 app.AddRotasDocumentos();
