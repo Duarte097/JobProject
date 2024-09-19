@@ -18,7 +18,8 @@ namespace ApiCrud.Documentos
                   DateTime.Now,
                   request.Caminho,
                   request.Versao,
-                  request.Categoria  
+                  request.Categoria,
+                  request.UsuarioId 
                 );
                 context.Documentos.Add(novoDocumento);
                 await context.SaveChangesAsync();

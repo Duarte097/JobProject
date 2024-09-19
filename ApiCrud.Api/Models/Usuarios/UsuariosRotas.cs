@@ -23,7 +23,7 @@ namespace ApiCrud.Usuario
                 return Results.Created($"/usuarios/{novoUsuario.IdUsuarios}", novoUsuario);
             });
 
-            // Exemplo de GET
+            //GET
             rotasusuarios.MapGet("{id}", async (int id, AppDbContext context) => {
                 var usuario = await context.Usuarios.FindAsync(id);
                 return usuario is not null ? Results.Ok(usuario) : Results.NotFound();

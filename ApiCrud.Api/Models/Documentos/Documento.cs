@@ -12,33 +12,55 @@ namespace ApiCrud.Models
     
     public class Documento
     {
-        public int id_documento { get; init; }
-        public string Nome { get; private set; }
-        public string Descricao { get; set; }
-        public string Categoria { get; set; } 
+        [Key]
+        public int IdDocumento { get; init; }
+
+        [Required]
+        [MaxLength(255)]
+        public string? Nome { get; private set; }
+
+        [MaxLength(255)]
+        public string? Descricao { get; set; }
+
+        [MaxLength(100)]
+        public string? Categoria { get; set; }
+
         public DateTime DataUpload { get; set; }
+
+        [Required]
+        [MaxLength(20)]
         public Status Status { get; private set; }
-        public string Caminho { get; set; }
-        public string Versao { get; set; }
-        
-        public virtual ICollection<Permissao> Permisaos { get; set; } = new List<Permissao>();
 
-        public virtual UsuarioModel Usuario { get; set; } = null!;
+        [MaxLength(500)]
+        public string? Caminho { get; set; }
 
-        public virtual ICollection<Versaodocumento> Versaodocumentos { get; set; } = new List<Versaodocumento>();
+        [MaxLength(10)]
+        public string? VersaoAtual { get; set; }
 
-        public Documento(int id_documento, string nome, string descricao, DateTime dataUpload, string caminho, string versao, string categoria)
+        [ForeignKey("Usuarios")]
+        public int UsuarioId { get; set; } 
+
+        public UsuarioModel Usuario { get; set; } = null!;
+
+        public ICollection<Versaodocumento> Versaodocumento { get; set; } = new List<Versaodocumento>();
+        public ICollection<Permissao> Permissoes { get; set; } = new List<Permissao>() ;
+        //public object? VersaoDocumentos { get; internal set; }
+
+
+        // Construtor
+        public Documento(int idocumento, string nome, string descricao, DateTime dataUpload, string caminho, string versaoatual, string categoria, int usuarioid)
         {
             this.Nome = nome;
-            this.id_documento = id_documento;
+            this.IdDocumento = idocumento;
             this.Descricao = descricao;
             this.DataUpload = dataUpload;
             this.Status = Status.Ativo;
             this.Caminho = caminho;
-            this.Versao = versao;
+            this.VersaoAtual = versaoatual;
             this.Categoria = categoria; 
+            this.UsuarioId = usuarioid;
         }
-        
+
         public void Inativar()
         {
             this.Status = Status.Inativo;
@@ -48,7 +70,8 @@ namespace ApiCrud.Models
         {
             this.Status = Status.Ativo;
         }
-        
+        public Documento() { }
     }
+
 }
 

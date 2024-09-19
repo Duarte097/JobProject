@@ -12,6 +12,7 @@ public static class VersaoDoc{
         rotasversaodoc.MapPost("", async (AddVersaoDocRequest request, AppDbContext context) => {
             var novaVersaoDoc= new Versaodocumento(
                 request.NumeroVersao,
+                request.DocumentoId,
                 DateTime.Now,
                 request.CaminhoVersaoArquivo,
                 request.Descricao
@@ -20,5 +21,11 @@ public static class VersaoDoc{
             await context.SaveChangesAsync();
             return Results.Created($"/versaodocumento/{novaVersaoDoc.IdVersaodocumento}", novaVersaoDoc);
         });
+
+            // GET
+            rotasversaodoc.MapGet("{id}", async (int id, AppDbContext context) => {
+                var versaodocumento = await context.VersaoDoc.FindAsync(id);
+                return versaodocumento is not null ? Results.Ok(versaodocumento) : Results.NotFound();
+            });
     }
 }

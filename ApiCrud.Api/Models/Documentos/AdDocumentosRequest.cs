@@ -5,5 +5,6 @@ public record AddDocumentosRequest(
     string Descricao,
     string Categoria,
     string Caminho,
-    string Versao
+    string Versao,
+    int UsuarioId
 );

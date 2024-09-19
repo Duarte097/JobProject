@@ -23,7 +23,7 @@ namespace ApiCrud.Data
             base.OnConfiguring(optionsBuilder);
         }
 
-        // Se você tiver configurações adicionais, como configurações específicas para cada entidade, adicione-as aqui
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Exemplo de configuração adicional
@@ -32,18 +32,38 @@ namespace ApiCrud.Data
             modelBuilder.Entity<Permissao>().ToTable("Permissao");
             modelBuilder.Entity<Versaodocumento>().ToTable("Versaodocumento");
 
-            // Configure relacionamentos e chaves primárias, se necessário
+            // Chaves primárias
+            modelBuilder.Entity<Documento>().HasKey(d => d.IdDocumento);
+            modelBuilder.Entity<UsuarioModel>().HasKey(u => u.IdUsuarios);
+            modelBuilder.Entity<Permissao>().HasKey(p => p.IdPermissao);
+            modelBuilder.Entity<Versaodocumento>().HasKey(v => v.IdVersaodocumento);
+
+            // Relacionamento Documento -> Usuario
             modelBuilder.Entity<Documento>()
-               .HasKey(d => d.id_documento); // Substitua 'Id' pelo nome da chave primária se diferente
+                .HasOne(d => d.Usuario) // Documento tem um Usuário
+                .WithMany(u => u.Documentos) // Usuário pode ter muitos Documentos
+                .HasForeignKey(d => d.UsuarioId) // Chave estrangeira
+                .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata ao deletar o usuário
 
-            modelBuilder.Entity<UsuarioModel>()
-               .HasKey(u => u.IdUsuarios); // Substitua 'IdUsuarios' pelo nome da chave primária se diferente
-            
-            modelBuilder.Entity<Permissao>()
-               .HasKey(u => u.IdPermissao); // Substitua 'IdUsuarios' pelo nome da chave primária se diferente
-
+            // Relacionamento VersaoDocumento -> Documento
             modelBuilder.Entity<Versaodocumento>()
-               .HasKey(u => u.IdVersaodocumento); // Substitua 'IdUsuarios' pelo nome da chave primária se diferente    
+                .HasOne(v => v.Documento) // Versão de Documento pertence a um Documento
+                .WithMany(d => d.Versaodocumento) // Documento pode ter várias versões
+                .HasForeignKey(v => v.DocumentoId) // Chave estrangeira
+                .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata ao deletar o documento
+
+            // Relacionamento Permissao -> Usuario e Documento
+            modelBuilder.Entity<Permissao>()
+                .HasOne(p => p.Usuario) // Permissão pertence a um Usuário
+                .WithMany(u => u.Permissoes) // Usuário pode ter várias permissões
+                .HasForeignKey(p => p.UsuarioId) // Chave estrangeira
+                .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata ao deletar o usuário
+
+            modelBuilder.Entity<Permissao>()
+                .HasOne(p => p.Documento) // Permissão pertence a um Documento
+                .WithMany(d => d.Permissoes) // Documento pode ter várias permissões
+                .HasForeignKey(p => p.DocumentoId) // Chave estrangeira
+                .OnDelete(DeleteBehavior.Cascade); // Excluir em cascata ao deletar o documento  
         }
     }
 }

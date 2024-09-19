@@ -10,11 +10,20 @@ namespace ApiCrud.Permisao
             // POST
             rotaspermissao.MapPost("", async (AddPermissaoRequest request, AppDbContext context) => {
                 var novaPermissao = new Permissao(
-                    request.Permissaotipo
+                    request.Permissaotipo,
+                    request.Usuarioid,
+                    request.Documentoid
+
                 );
                 context.Permissao.Add(novaPermissao); 
                 await context.SaveChangesAsync();
                 return Results.Created($"/permissao/{novaPermissao.IdPermissao}", novaPermissao);
+            });
+
+            //GET
+            rotaspermissao.MapGet("{id}", async (int id, AppDbContext context) => {
+                var permissao= await context.Permissao.FindAsync(id);
+                return permissao is not null ? Results.Ok(permissao) : Results.NotFound();
             });
         }
     }
