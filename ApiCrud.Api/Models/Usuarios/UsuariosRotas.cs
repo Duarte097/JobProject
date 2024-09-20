@@ -64,7 +64,7 @@ namespace ApiCrud.Usuario
                 if(usuario == null)
                     return Results.NotFound();
 
-                usuario.Desativar();
+                //usuario.Desativar();
 
                 await context.SaveChangesAsync(ct);
                 return Results.Ok();

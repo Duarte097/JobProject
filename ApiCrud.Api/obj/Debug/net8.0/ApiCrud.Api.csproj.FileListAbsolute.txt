@@ -122,3 +122,16 @@ C:\DigitalDoc\ApiCrud.Api\obj\Debug\net8.0\refint\ApiCrud.Api.dll
 C:\DigitalDoc\ApiCrud.Api\obj\Debug\net8.0\ApiCrud.Api.pdb
 C:\DigitalDoc\ApiCrud.Api\obj\Debug\net8.0\ApiCrud.Api.genruntimeconfig.cache
 C:\DigitalDoc\ApiCrud.Api\obj\Debug\net8.0\ref\ApiCrud.Api.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Shoppy.Abstraction.Serialization.dll
+C:\DigitalDoc\ApiCrud.Api\bin\Debug\net8.0\Shoppy.Toolkit.Serialization.Microsoft.dll
