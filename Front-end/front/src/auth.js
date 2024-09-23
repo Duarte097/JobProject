@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crie uma instância do Axios
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5086/api/', // Ajuste para a sua URL da API
+  baseURL: 'http://localhost:5086/', // Ajuste para a sua URL da API
 });
 
 // Adicione um interceptor para incluir o token

@@ -1,10 +1,19 @@
 <template>
     <div class="container-login">
         <div class="wrap-login">
-            <form class="login-form" @submit.prevent="login">
+            <form class="login-form" @submit.prevent="cadastro">
                 <span class = "login-form-title">
-                    Login
+                    Cadastro de Usuarios
                 </span>
+                <div class="wrap-input" :class="{'has-val' : nome !== ''}">
+                  <input class="input" type="text" v-model="nome" required />
+                  <span class="focus-input" data-placeholder="Nome"></span>
+                </div>
+
+                <div class="wrap-input" :class="{'has-val' : papel !== ''}">
+                  <input class="input" type="text" v-model="papel" required />
+                  <span class="focus-input" data-placeholder="Papel"></span>
+                </div>
                 <div class="wrap-input" :class="{'has-val' : email !== ''}">
                     <input class="input" type="email" v-model="email" required />
                     <span class="focus-input" data-placeholder="Email"></span>
@@ -14,13 +23,10 @@
                     <span class="focus-input" data-placeholder="Senha"></span>
                 </div>
                 <div class="container-login-form-btn">
-                    <button type="submit" class="login-form-btn">Login</button>
+                    <button type="submit" class="login-form-btn">Cadastrar</button>
                 </div>
                 <div class="text=center">
-                    <a href="#" class="txt1">Esqueceu a senha?</a>
-                </div>
-                <div class="text=center">
-                    <a @click.prevent="goToRegister" href="#" class="txt1">Cadastrar</a>
+                    <a @click.prevent="goToLogin" href="#" class="txt1">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -34,25 +40,28 @@
   export default {
   data() {
     return {
+      nome: '',
+      papel: '',
       email: '',
       password: ''
     };
   },
   methods: {
-    async login() {
+    async cadastro() {
       try {
-        const response = await axios.post('api/auth/login', {
+         await axios.post('usuarios/register', {
+          nome: this.nome,
+          papel: this.papel,
           email: this.email,
           senhaHash: this.password
         });
-        localStorage.setItem('token', response.data.Token);
-        this.$router.push('/home');
+        this.$router.push('/login');
       } catch (error) {
-        alert('Falha no login: ' + error.response.data);
+        alert('Falha no cadastro: ' + error.response.data);
       }
     },
-    goToRegister() {
-      this.$router.push('/register'); // Redireciona para a página de cadastro
+    goToLogin(){
+      this.$router.push('/login')
     }
   }
 };

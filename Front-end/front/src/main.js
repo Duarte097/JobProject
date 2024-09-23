@@ -3,9 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 import App from './App.vue';
 import HomeView from './Views/HomeView.vue';
 import LoginView from './Views/LoginView.vue';
+import CadastroView from './Views/CadastroView.vue';
 
 const routes = [
     { path: '/login', component: LoginView },
+    { path: '/register', component: CadastroView }, // Nova rota para o cadastro
     { path: '/home', component: HomeView, meta: { requiresAuth: true } },
     // Outras rotas...
   ];
@@ -27,7 +29,8 @@ const routes = [
     }
   });
   
-  export default router;
+export default router;
+
 createApp(App)
-    .use(router)
-    .mount('#app');
+  .use(router)
+  .mount('#app');

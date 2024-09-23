@@ -1,38 +1,43 @@
 using ApiCrud.Data;
 using ApiCrud.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiCrud.Usuario
 {
     public static class UsuariosRotas
     {
+        [HttpPost]
+        [AllowAnonymous]
         public static void AddRotasUsuarios(this WebApplication app)
         {
-            var rotasusuarios = app.MapGroup("usuarios");
+            var rotasusuarios = app.MapGroup("Usuarios");
             
             // POST Usuario
-            rotasusuarios.MapPost("", async (AddUsuariosRequest request, AppDbContext context, CancellationToken ct) => {
-                var jaExiste  = await context.Usuarios.AnyAsync(Usuario => Usuario.Email == request.Email, ct);
+            rotasusuarios.MapPost("register", async (AddUsuariosRequest request, AppDbContext context, CancellationToken ct) => {
+            var jaExiste  = await context.Usuarios.AnyAsync(Usuario => Usuario.Email == request.Email, ct);
 
-                if(jaExiste)
-                    return  Results.Conflict("Já existe!");
+            if(jaExiste)
+                return Results.Conflict("Já existe!");
 
-                var senhaHash = UsuarioService.HashPassword(request.SenhaHash);
+            var senhaHash = UsuarioService.HashPassword(request.SenhaHash);
 
-                var novoUsuario = new UsuarioModel(
-                  request.Nome,
-                  request.Email,
-                  senhaHash,
-                  request.Papel,
-                  DateTime.Now
-                );
+            var novoUsuario = new UsuarioModel(
+                request.Nome,
+                request.Email,
+                senhaHash,
+                request.Papel,
+                DateTime.Now
+            );
 
-                context.Usuarios.Add(novoUsuario); // Certifique-se de que `Usuarios` está definido no AppDbContext
-                await context.SaveChangesAsync(ct);
-                var usuarioretorno = new UsuarioDTO(novoUsuario.IdUsuarios, novoUsuario.Nome, novoUsuario.Papel);
-                return Results.Ok(novoUsuario);
-                //return Results.Created($"/usuarios/{novoUsuario.IdUsuarios}", novoUsuario);
-            });
+            context.Usuarios.Add(novoUsuario);
+            await context.SaveChangesAsync(ct);
+            
+            // Retornando o DTO sem o senhaHash
+            var usuarioRetorno = new UsuarioDTO(novoUsuario.IdUsuarios, novoUsuario.Nome, novoUsuario.Papel);
+            return Results.Ok(usuarioRetorno);
+        });
 
             //GET Usuario
             rotasusuarios.MapGet("{id}", async (int id, AppDbContext context, CancellationToken ct) => {
