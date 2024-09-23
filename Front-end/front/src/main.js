@@ -4,10 +4,14 @@ import App from './App.vue';
 import HomeView from './Views/HomeView.vue';
 import LoginView from './Views/LoginView.vue';
 import CadastroView from './Views/CadastroView.vue';
+import DocumentosView from './Views/DocumentosView.vue';
+import PerfilView from './Views/PerfilView.vue';
 
 const routes = [
     { path: '/login', component: LoginView },
     { path: '/register', component: CadastroView }, // Nova rota para o cadastro
+    { path: '/documentos', component: DocumentosView},
+    { path: '/perfil', component: PerfilView},
     { path: '/home', component: HomeView, meta: { requiresAuth: true } },
     // Outras rotas...
   ];

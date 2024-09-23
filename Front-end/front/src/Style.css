@@ -172,3 +172,113 @@ color: red;
     line-height: 1.5;
     text-decoration: none;
 }
+
+.container-Inicial {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: left;
+    justify-content: left;
+    padding: 5px;
+    background-color: #111;
+}
+
+.wrap-Inicial {
+    width: 300px;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 77px 55px 33px 55px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.Inicial-form-btn {
+    font-size: 10px;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    line-height: 1.2;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 30px;
+    background: linear-gradient(to left, #21d4fd, #b721ff);
+}
+
+.Inicial-form-title {
+    display: block;
+    font-size: 30px;
+    color: azure;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.header {
+    background-color: #333; /* Cor de fundo da barra */
+    padding: 10px 20px; /* Espaçamento interno */
+    display: flex;
+    justify-content: space-between; /* Espaça os itens para os lados */
+    align-items: center; /* Alinha verticalmente ao centro */
+    color: white; /* Cor do texto */
+}
+
+.header-container {
+    display: flex;
+    align-items: center; /* Alinha verticalmente ao centro */
+    flex: 1;
+}
+
+.header-container2 {
+    display: flex;
+    align-items: center; /* Alinha verticalmente ao centro */
+}
+.username {
+    margin-right: 20px; /* Espaçamento entre o nome e os botões */
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-left: auto;
+}
+
+.header-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza o ícone e o texto */
+    width: 30px; /* Ajuste conforme necessário */
+    height: 30px; /* Ajuste conforme necessário */
+    background-color: #333; /* Cor de fundo do botão */
+    border: none; /* Remove a borda */
+    border-radius: 10px; /* Arredonda os cantos */
+    cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+}
+
+.icon {
+    width: 100%; /* Faz a imagem ocupar 100% da largura do botão */
+    height: 100%; /* Faz a imagem ocupar 100% da altura do botão */
+    object-fit: cover; /* Mantém a proporção da imagem */
+    margin-right: 5px; /* Espaçamento entre o ícone e o texto */
+}
+
+.header-btn span {
+    display: none; /* Esconde o texto para usar apenas o ícone */
+}
+.header-btn:hover {
+    background-color: #b721ff; /* Cor do botão ao passar o mouse */
+}
+
+.container-Alterar {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin-top: 20px;
+    background-color: #111;
+}

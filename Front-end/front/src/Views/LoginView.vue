@@ -5,7 +5,7 @@
                 <span class = "login-form-title">
                     Login
                 </span>
-                <div class="wrap-input" :class="{'has-val' : email !== ''}">
+                <div class="wrap-input" :classname="{'has-val input' : email !== ''}">
                     <input class="input" type="email" v-model="email" required />
                     <span class="focus-input" data-placeholder="Email"></span>
                 </div>
