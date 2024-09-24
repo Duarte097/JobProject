@@ -55,13 +55,13 @@
           email: this.email,
           senhaHash: this.password
         });
-        this.$router.push('/login');
+        this.$router.push('/');
       } catch (error) {
         alert('Falha no cadastro: ' + error.response.data);
       }
     },
     goToLogin(){
-      this.$router.push('/login')
+      this.$router.push('/')
     }
   }
 };

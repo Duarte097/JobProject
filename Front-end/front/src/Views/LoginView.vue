@@ -45,7 +45,10 @@
           email: this.email,
           senhaHash: this.password
         });
+        console.log('Resposta da API:', response.data);
         localStorage.setItem('token', response.data.Token);
+        localStorage.setItem('idUsuarios', response.data.user.idUsuarios);
+        console.log('User ID:', response.data.user.idUsuarios);
         this.$router.push('/home');
       } catch (error) {
         alert('Falha no login: ' + error.response.data);

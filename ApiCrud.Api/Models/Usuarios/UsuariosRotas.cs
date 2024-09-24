@@ -35,7 +35,7 @@ namespace ApiCrud.Usuario
             await context.SaveChangesAsync(ct);
             
             // Retornando o DTO sem o senhaHash
-            var usuarioRetorno = new UsuarioDTO(novoUsuario.IdUsuarios, novoUsuario.Nome, novoUsuario.Papel);
+            var usuarioRetorno = new UsuarioDTO(novoUsuario.Nome, novoUsuario.Papel, novoUsuario.SenhaHash);
             return Results.Ok(usuarioRetorno);
         });
 
@@ -48,18 +48,25 @@ namespace ApiCrud.Usuario
             //Update Usuario
             rotasusuarios.MapPut("{id}", async (int id, UpdateUsuariosRequest request, AppDbContext context, CancellationToken ct) => 
             {
-                var usuario = await context.Usuarios.SingleOrDefaultAsync(usuario => usuario.IdUsuarios == id, ct);
+                var usuario = await context.Usuarios.SingleOrDefaultAsync(u => u.IdUsuarios == id, ct);
 
-                if(usuario == null)
+                if (usuario == null)
                     return Results.NotFound();
+
                 
-                usuario.Nome =  request.nome;
-                usuario.SenhaHash = request.SenhaHash;
-                usuario.Papel =  request.Papel;
+                usuario.Nome = request.nome;
+                usuario.Papel = request.Papel; 
+
+                
+                if (!string.IsNullOrWhiteSpace(request.SenhaHash))
+                {
+                    usuario.SenhaHash = UsuarioService.HashPassword(request.SenhaHash); // Hash a nova senha
+                }
 
                 await context.SaveChangesAsync(ct);
-                return Results.Ok(new UsuarioDTO(usuario.IdUsuarios, usuario.Nome, usuario.Papel));
+                return Results.Ok(new UsuarioDTO(usuario.Nome, usuario.Papel, usuario.SenhaHash)); // Retorne o DTO atualizado
             });
+
 
             //Delete
             rotasusuarios.MapDelete("{id}", async (int id, AppDbContext context, CancellationToken ct) =>

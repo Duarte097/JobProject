@@ -2,7 +2,7 @@ namespace ApiCrud.Usuario;
 
 public record UsuarioDTO
 (
-    int idUsuarios,
     string? Nome,
+    string? SenhaHash,
     string? Papel
 );

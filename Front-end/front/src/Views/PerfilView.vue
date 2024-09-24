@@ -7,7 +7,13 @@
                     <img src="../assets/perfil.png" alt="Perfil" class="icon">
                   </button>
                 </div>
-                <span class="username">{{ username }}</span>
+                <span class="username">{{ nome }}</span>
+                <div class="header-buttons3">
+                    <button @click="alterarUsuario" class="perfil-form-btn">Inicio</button>
+                </div>
+                <div class="header-buttons4">
+                    <button @click="documentos" class="perfil-form-btn">Documentos</button>
+                </div>
                 <div class="header-buttons">
                   <button @click="logout" class="header-btn">
                       <img src="../assets/Sair.png" alt="Sair" class="icon"/>
@@ -15,19 +21,8 @@
                 </div>
             </div>
         </header>
-        <div class="container-Inicial">
-            <div class="wrap-Inicial">
-                <span class="login-form-title">
-                    Bem Vindo!
-                </span>
-                <div class="container-login-form-btn">
-                    <button @click="alterarUsuario" class="Inicial-form-btn">Alterar Usuário</button>
-                </div>
-                <div class="container-login-form-btn">
-                    <button @click="documentos" class="Inicial-form-btn">Documentos</button>
-                </div>
-            </div>
-            <div class="container-Altera">
+        <div class="container-login">
+            <div class="wrap-login">
                 <form class="login-form" @submit.prevent="cadastro">
                     <span class = "login-form-title">
                         Alteração do usuario
@@ -41,16 +36,12 @@
                     <input class="input" type="text" v-model="papel" required />
                     <span class="focus-input" data-placeholder="Papel"></span>
                     </div>
-                    <div class="wrap-input" :class="{'has-val' : email !== ''}">
-                        <input class="input" type="email" v-model="email" required />
-                        <span class="focus-input" data-placeholder="Email"></span>
-                    </div>
                     <div class="wrap-input" :class="{'has-val' : password !== ''}">
                         <input class="input" type="password" v-model="password" required />
                         <span class="focus-input" data-placeholder="Senha"></span>
                     </div>
                     <div class="container-login-form-btn">
-                        <button type="submit" class="login-form-btn">Salvar</button>
+                        <button type="submit" @click.prevent="Alterar" class="login-form-btn">Salvar</button>
                     </div>
                     <div class="text=center">
                         <a @click.prevent="goToLogin" href="#" class="txt1">Cancelar</a>
@@ -59,27 +50,63 @@
             </div>
         </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-      data() {
-          return {
-              username: 'Leonardo Ramalho Duarte' // Substitua pelo nome do usuário logado
-          };
-      },
-      methods: {
-          logout() {
-              localStorage.removeItem('token');
-              this.$router.push('/login');
-          },
-          goToProfile() {
-              this.$router.push('/perfil'); // Ajuste a rota para a página de perfil
-          },
-          documentos() {
-              this.$router.push('/documentos');
-          }
-      }
-  };
-  </script>
-  
+</template>
+
+<script>
+import axios from '../auth';
+import '../Style.css';
+
+export default {
+    data() {
+        return {
+            nome: "",
+            papel: "",
+            password: "" 
+        };
+    },
+    methods: {
+        async obterUsuarios() {
+            try {
+                const userId = localStorage.getItem('idUsuarios'); 
+                const response = await axios.get(`Usuarios/${userId}`); 
+                
+                this.nome = response.data.nome;
+                this.papel = response.data.papel;
+                this.password = response.data.senhaHash;
+            } catch (error) {
+                alert('Erro ao buscar usuários: ' + error.response.data);
+            }
+        },
+        async Alterar(){
+            try {
+                const userId = localStorage.getItem('idUsuarios'); 
+                await axios.put(`Usuarios/${userId}`, {
+                    nome: this.nome,
+                    papel: this.papel,
+                    senhaHash: this.password
+                });
+                this.$router.push('/home');
+            } catch (error) {
+                alert('Falha no cadastro: ' + error.response.data);
+            }
+        },
+        logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            this.$router.push('/');
+        },
+        goToProfile() {
+            this.$router.push('/perfil');
+        },
+        alterarUsuario() {
+            this.$router.push('/home');
+        },
+        documentos() {
+            this.$router.push('/documentos');
+        }
+    },
+    mounted() {
+        this.obterUsuarios();
+    }
+};
+</script>

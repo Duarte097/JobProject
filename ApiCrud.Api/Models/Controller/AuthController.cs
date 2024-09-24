@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] AddLoginRequest model)
     {
-        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == model.Email);
+        var usuario = await _context.Usuarios.SingleOrDefaultAsync(u => u.Email == model.Email);
 
         if (usuario == null)
         {
@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
             return Unauthorized("Credenciais inválidas");
         }
 
-        if (!UsuarioService.VerificarSenha(model.SenhaHash, usuario.SenhaHash))
+        if (usuario == null || !UsuarioService.VerificarSenha(model.SenhaHash, usuario.SenhaHash))
         {
             return Unauthorized("Credenciais inválidas");
         }

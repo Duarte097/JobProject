@@ -7,7 +7,7 @@
                   <img src="../assets/perfil.png" alt="Perfil" class="icon">
                 </button>
               </div>
-              <span class="username">{{ username }}</span>
+              <span class="username">{{ nome }}</span>
               <div class="header-buttons">
                 <button @click="logout" class="header-btn">
                     <img src="../assets/Sair.png" alt="Sair" class="icon"/>
@@ -35,16 +35,29 @@
 </template>
 
 <script>
+import axios from '../auth';
+import '../Style.css';
+
 export default {
     data() {
         return {
-            username: 'Leonardo Ramalho Duarte' // Substitua pelo nome do usuário logado
+            nome: "",
         };
     },
     methods: {
+        async obterUsuarios() {
+            try {
+                const userId = localStorage.getItem('idUsuarios'); 
+                const response = await axios.get(`Usuarios/${userId}`); 
+                
+                this.nome = response.data.nome;
+            } catch (error) {
+                alert('Erro ao buscar usuários: ' + error.response.data);
+            }
+        },
         logout() {
             localStorage.removeItem('token');
-            this.$router.push('/login');
+            this.$router.push('/');
         },
         goToProfile() {
             this.$router.push('/perfil'); // Ajuste a rota para a página de perfil
@@ -52,6 +65,9 @@ export default {
         documentos() {
             this.$router.push('/documentos');
         }
+    },
+    mounted() {
+        this.obterUsuarios();
     }
 };
 </script>

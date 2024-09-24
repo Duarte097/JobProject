@@ -8,7 +8,7 @@ import DocumentosView from './Views/DocumentosView.vue';
 import PerfilView from './Views/PerfilView.vue';
 
 const routes = [
-    { path: '/login', component: LoginView },
+    { path: '/', component: LoginView },
     { path: '/register', component: CadastroView }, // Nova rota para o cadastro
     { path: '/documentos', component: DocumentosView},
     { path: '/perfil', component: PerfilView},
@@ -27,7 +27,7 @@ const routes = [
     // Verifique se a rota requer autenticação
     if (to.meta.requiresAuth && !token) {
       // Se não estiver autenticado, redirecione para a página de login
-      next({ path: '/login' });
+      next({ path: '/' });
     } else {
       next();
     }
