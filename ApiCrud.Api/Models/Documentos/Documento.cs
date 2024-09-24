@@ -29,7 +29,7 @@ namespace ApiCrud.Models
 
         [Required]
         [MaxLength(20)]
-        public Status Status { get; private set; }
+        public Status Status { get; set; }
 
         [MaxLength(500)]
         public string? Caminho { get; set; }
@@ -60,15 +60,6 @@ namespace ApiCrud.Models
             this.UsuarioId = usuarioid;
         }
 
-        public void Desativar()
-        {
-            this.Status = Status.Inativo;
-        }
-
-        public void Ativar()
-        {
-            this.Status = Status.Ativo;
-        }
         public Documento() { }
     }
 

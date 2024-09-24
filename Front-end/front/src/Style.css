@@ -321,3 +321,21 @@ color: red;
     height: 28px;
     background: linear-gradient(to left, #21d4fd, #b721ff);
 }
+
+.pointer {
+    cursor: pointer;
+}
+.custom-table {
+    width: 90%; /* Ajusta a largura da tabela (pode ser % ou px) */
+    font-size: 15px; /* Diminui o tamanho da fonte */
+    table-layout: auto; /* Ajusta o layout da tabela */
+}
+
+.custom-table th, .custom-table td {
+    padding: 5px 10px; /* Diminui o espaço dentro das células */
+    margin: 0; /* Remove margem, se houver */
+}
+
+.icon-container {
+    margin-right: 10px; /* Ajuste o valor conforme necessário */
+}

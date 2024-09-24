@@ -68,12 +68,14 @@ namespace ApiCrud.Documentos
                 {
                     Nome = form["nome"],
                     Descricao = form["descricao"],
-                    Caminho = filePath, // Caminho do arquivo
+                    Caminho = filePath, // Corrigido para CaminhoArquivo
                     DataUpload = DateTime.Now,
                     VersaoAtual = form["versao"],
                     Categoria = form["categoria"],
-                    UsuarioId = usuarioId // ID do usuário logado obtido do token
+                    Status = Status.Ativo, // Definindo status como Ativo
+                    UsuarioId = usuarioId
                 };
+
 
                 context.Documentos.Add(novoDocumento);
                 await context.SaveChangesAsync();
@@ -105,15 +107,14 @@ namespace ApiCrud.Documentos
             });
 
             // Exemplo de GET
-            rotasdocumentos.MapGet("{id}", async (int id, AppDbContext context) => {
-                var documentos = await context.Documentos.FindAsync(id);
-                return documentos is not null ? Results.Ok(documentos) : Results.NotFound();
+            rotasdocumentos.MapGet("", async (AppDbContext context) => {
+                var documentos = await context.Documentos.ToListAsync();
+                return Results.Ok(documentos);
             });
 
-            //Update Documento
+            // Update Documento
             rotasdocumentos.MapPut("{id}", async (int id, UpdateDocumentos request, AppDbContext context, HttpContext httpContext, CancellationToken ct) => 
             {
-                // Obter as claims do usuário autenticado
                 var user = httpContext.User;
 
                 // Verificar se o usuário está autenticado
@@ -122,56 +123,91 @@ namespace ApiCrud.Documentos
                     return Results.Unauthorized(); // Retorna 401 se o usuário não estiver autenticado
                 }
 
-                // Obter o email ou o ID do usuário a partir das claims do token JWT
-                var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
-
-                if (string.IsNullOrEmpty(userEmail))
+                // Obter o ID do usuário das claims
+                var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
                 {
                     return Results.BadRequest("Usuário não identificado.");
                 }
 
-                // Buscar o usuário no banco de dados com base no email ou ID
-                var usuario = await context.Usuarios.SingleOrDefaultAsync(u => u.Email == userEmail, ct);
+                // Buscar o usuário no banco de dados
+                var usuario = await context.Usuarios.SingleOrDefaultAsync(u => u.IdUsuarios == int.Parse(userIdClaim), ct);
 
                 if (usuario == null)
                 {
                     return Results.NotFound("Usuário não encontrado.");
                 }
 
-                // Verificar se o papel do usuário é "Administrador"
+                var documento = await context.Documentos.SingleOrDefaultAsync(d => d.IdDocumento == id, ct);
+
+                if (documento == null)
+                {
+                    return Results.NotFound();
+                }
+
+                // Se o usuário não for administrador, verificar se ele é o dono do documento
+                if (usuario.Papel != "Administrador" && documento.UsuarioId != usuario.IdUsuarios)
+                {
+                    return Results.Forbid(); // Retorna 403 se não for administrador e não for o dono do documento
+                }
+
+                // Atualiza todos os atributos
+                documento.Nome = request.Nome;
+                documento.Descricao = request.Descricao;
+                documento.Status = request.Status;
+                documento.Caminho = request.Caminho;
+                documento.VersaoAtual = request.Versaoatual;
+                documento.Categoria = request.Categoria;
+    
+                await context.SaveChangesAsync(ct);
+                return Results.Ok(new DocumentosDTO(documento.IdDocumento, documento.Nome, documento.Descricao,documento.Status, documento.VersaoAtual, documento.Categoria));
+            });
+
+
+            //Delete
+            rotasdocumentos.MapDelete("{id}", async (int id, AppDbContext context, HttpContext httpContext, CancellationToken ct) =>
+            {
+                var user = httpContext.User;
+
+                // Verificar se o usuário está autenticado
+                if (!user.Identity.IsAuthenticated)
+                {
+                    return Results.Unauthorized(); // Retorna 401 se o usuário não estiver autenticado
+                }
+
+                // Obter o ID do usuário das claims
+                var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Results.BadRequest("Usuário não identificado.");
+                }
+
+                // Buscar o usuário no banco de dados
+                var usuario = await context.Usuarios.SingleOrDefaultAsync(u => u.IdUsuarios == int.Parse(userIdClaim), ct);
+
+                if (usuario == null)
+                {
+                    return Results.NotFound("Usuário não encontrado.");
+                }
+
+                // Verificar se o usuário é um administrador
                 if (usuario.Papel != "Administrador")
                 {
                     return Results.Forbid(); // Retorna 403 se o usuário não for administrador
                 }
 
-                var documento = await context.Documentos.SingleOrDefaultAsync(documento => documento.IdDocumento == id, ct);
+                var documento = await context.Documentos.SingleOrDefaultAsync(d => d.IdDocumento == id, ct);
 
-                if(documento == null)
+                if (documento == null)
+                {
                     return Results.NotFound();
-                
-                documento.Nome = request.Nome;
-                documento.Descricao =  request.Descricao;
-                documento.Caminho = request.Caminho;
-                documento.VersaoAtual =  request.Versaoatual;
-                documento.Categoria = request.Categoria;
+                }
 
-                await context.SaveChangesAsync(ct);
-                return Results.Ok(new DocumentosDTO(documento.IdDocumento, documento.Nome, documento.Descricao, documento.VersaoAtual, documento.Categoria));
-            });
-
-            //Delete
-            rotasdocumentos.MapDelete("{id}", async (int id, AppDbContext context, CancellationToken ct) =>
-            {
-                var documento = await context.Documentos.SingleOrDefaultAsync(documento => documento.IdDocumento == id, ct);
-
-                if(documento == null)
-                    return Results.NotFound();
-
-                documento.Desativar();
-
+                documento.Status = Status.Inativo; // Desativando o documento
                 await context.SaveChangesAsync(ct);
                 return Results.Ok();
             });
+
         }
     }
 }
