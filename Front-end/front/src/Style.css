@@ -249,11 +249,11 @@ color: red;
     display: flex;
     align-items: center;
     justify-content: center; /* Centraliza o ícone e o texto */
-    width: 30px; /* Ajuste conforme necessário */
-    height: 30px; /* Ajuste conforme necessário */
+    width: 40px; /* Ajuste conforme necessário */
+    height: 40px; /* Ajuste conforme necessário */
     background-color: #333; /* Cor de fundo do botão */
     border: none; /* Remove a borda */
-    border-radius: 10px; /* Arredonda os cantos */
+    border-radius: 15px; /* Arredonda os cantos */
     cursor: pointer; /* Muda o cursor ao passar sobre o botão */
 }
 
@@ -267,9 +267,7 @@ color: red;
 .header-btn span {
     display: none; /* Esconde o texto para usar apenas o ícone */
 }
-.header-btn:hover {
-    background-color: #b721ff; /* Cor do botão ao passar o mouse */
-}
+
 
 .container-Alterar {
     width: 100%;
@@ -338,4 +336,11 @@ color: red;
 
 .icon-container {
     margin-right: 10px; /* Ajuste o valor conforme necessário */
+}
+
+.status-container {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    gap: 20px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
+    margin-top: 20px; /* Espaçamento superior para separação */
 }

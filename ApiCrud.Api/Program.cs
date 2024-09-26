@@ -70,7 +70,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Add custom route registrations if necessary
-app.AddRotasDocumentos();
+//app.AddRotasDocumentos();
+//app.DocumentosController();
 app.AddRotasUsuarios();
 app.AddRotasPermissao();
 app.AddRotasVersaoDoc();

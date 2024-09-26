@@ -6,6 +6,7 @@ import LoginView from './Views/LoginView.vue';
 import CadastroView from './Views/CadastroView.vue';
 import DocumentosView from './Views/DocumentosView.vue';
 import PerfilView from './Views/PerfilView.vue';
+import UploadArquivo from './Views/CadastroDocumentosView.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +15,7 @@ const routes = [
     { path: '/', component: LoginView },
     { path: '/register', component: CadastroView }, 
     { path: '/documentos', component: DocumentosView},
+    { path: '/uploadArquivo', component: UploadArquivo},
     { path: '/perfil', component: PerfilView},
     { path: '/home', component: HomeView, meta: { requiresAuth: true } },
     // Outras rotas...

@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using ApiCrud.Api.Models;
+using System.ComponentModel;
 
 namespace ApiCrud.Models 
 {
     public enum Status
     {
-        Ativo,
-        Inativo
+        Ativo = 0,
+        Inativo = 1
     }
     
     public class Documento
@@ -17,7 +18,7 @@ namespace ApiCrud.Models
 
         [Required]
         [MaxLength(255)]
-        public string? Nome { get;  set; }
+        public string? Nome { get; set; }
 
         [MaxLength(255)]
         public string? Descricao { get; set; }
@@ -27,10 +28,6 @@ namespace ApiCrud.Models
 
         public DateTime DataUpload { get; set; }
 
-        [Required]
-        [MaxLength(20)]
-        public Status Status { get; set; }
-
         [MaxLength(500)]
         public string? Caminho { get; set; }
 
@@ -38,17 +35,18 @@ namespace ApiCrud.Models
         public string? VersaoAtual { get; set; }
 
         [ForeignKey("Usuarios")]
-        public int UsuarioId { get; set; } 
+        public int UsuarioId { get; set; } // O usuário será setado automaticamente na controller, sem precisar ser passado na requisição.
+
+        [Required]
+        [EnumDataType(typeof(Status))]
+        public Status Status { get; set; }
 
         public UsuarioModel Usuario { get; set; } = null!;
 
         public ICollection<Versaodocumento> Versaodocumento { get; set; } = new List<Versaodocumento>();
-        public ICollection<Permissao> Permissoes { get; set; } = new List<Permissao>() ;
-        //public object? VersaoDocumentos { get; internal set; }
+        public ICollection<Permissao> Permissoes { get; set; } = new List<Permissao>();
 
-
-        // Construtor
-        public Documento(string nome, string descricao, DateTime dataUpload, string caminho, string versaoatual, string categoria, int usuarioid)
+        public Documento(string nome, string descricao, DateTime dataUpload, string caminho, string versaoatual, string categoria)
         {
             this.Nome = nome;
             this.Descricao = descricao;
@@ -56,12 +54,10 @@ namespace ApiCrud.Models
             this.Status = Status.Ativo;
             this.Caminho = caminho;
             this.VersaoAtual = versaoatual;
-            this.Categoria = categoria; 
-            this.UsuarioId = usuarioid;
+            this.Categoria = categoria;
+            // Removemos a associação do usuário aqui, pois será definido na camada Controller
         }
 
         public Documento() { }
     }
-
 }
-

@@ -42,7 +42,7 @@ public static class LoginRotas
             var token = TokenService.GenerateToken(request, configuration);
             usuario.SenhaHash = "";
 
-            return Results.Ok(new { user = usuario, Token = token });
+            return Results.Ok(new { user = usuario, Token = token, usuarioId = usuario.IdUsuarios });
         });
 
         // Define the routes after adding the login

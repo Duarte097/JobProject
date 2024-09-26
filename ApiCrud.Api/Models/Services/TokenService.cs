@@ -27,6 +27,7 @@ public static class TokenService
         {
             Subject = new ClaimsIdentity(new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.IdUsuarios.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
                 new Claim(ClaimTypes.Hash, user.SenhaHash.ToString())
             }),

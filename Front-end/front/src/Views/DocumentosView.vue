@@ -15,11 +15,12 @@
                     <button @click="documentosRoute" class="perfil-form-btn">Documentos</button>
                 </div>
                 <div class="header-buttons">
-                    <input type="file" ref="fileInput" @change="onFileChange" style="display:none">
-                    <button @click="triggerFileInput" class="header-btn">
-                        <img src="../assets/Upload.png" alt="Upload" class="icon"/>
-                    </button>
+                    <button @click="carregarArquivo" class="perfil-form-btn">Carregar Arquivo</button>
                 </div>
+                <!--div class="header-buttons">
+                    <input type="file" ref="fileInput" @change="onFileChange" style="display:none">
+                    <button @click="triggerFileInput" class="perfil-form-btn">Carregar Arquivo</button>
+                </div-->
                 <div class="header-buttons">
                     <button @click="logout" class="header-btn">
                         <img src="../assets/Sair.png" alt="Sair" class="icon"/>
@@ -106,7 +107,7 @@ export default {
         // Obter todos os documentos da API
         async obterDocumentos() {
             try {
-                const response = await axios.get('documento');
+                const response = await axios.get('Documentos/visualizar');
                 this.documentos = response.data; // Salvar todos os documentos em um array
             } catch (error) {
                 alert('Erro ao buscar documentos: ' + error.response?.data || error.message);
@@ -180,6 +181,9 @@ export default {
         },
         documentosRoute() {
             this.$router.push('/documentos');
+        },
+        carregarArquivo(){
+            this.$router.push('/uploadArquivo');
         },
         addTask() {
             if (this.newTask) {

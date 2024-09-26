@@ -7,4 +7,5 @@ public record AddDocumentosRequest(
     string Caminho,
     string Versao,
     int UsuarioId
+    //string Status
 );
