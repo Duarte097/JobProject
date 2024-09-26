@@ -25,7 +25,7 @@
             <div class="wrap-login">
                 <form class="login-form" @submit.prevent="cadastro">
                     <span class="login-form-title">
-                        Upload de Arquivo
+                       Editar Arquivo
                     </span>
                     <div class="wrap-input" :class="{'has-val' : descricao !== ''}">
                         <input class="input" type="text" v-model="descricao" required />
@@ -84,6 +84,7 @@ export default {
     data() {
         return {
             nome: "",
+            iddocumento:"",
             nomeDocumento: "",
             descricao: "",
             categoria: "",
@@ -107,48 +108,29 @@ export default {
                 console.log("Nenhum arquivo selecionado");
             }
         },
-        async cadastro() {
+        async obterDocumentos() {
             try {
-                const formData = new FormData();
-                const userId = localStorage.getItem('idUsuarios'); 
-                const token = localStorage.getItem('token');
-                
-                // O nome do documento será o nome do arquivo selecionado
-                const file = this.$refs.fileInput.files[0];
-                if (file) {
-                    formData.append('file', file);  // certifique-se que o nome corresponde ao que o backend espera
-                    formData.append('nome', this.nomeDocumento || file.name); // Nome do documento pode ser o nome definido pelo usuário ou pelo arquivo
-                } else {
-                    alert("Por favor, selecione um arquivo antes de fazer o upload.");
-                    return;
-                }
-
-                this.idusuario = userId;
-                // Não precisa adicionar o UsuarioId, pois será recuperado no backend
-                formData.append('files', file);  // Para o arquivo
-                formData.append('nome', this.nomeDocumento || file.name);
-                formData.append('descricao', this.descricao || '');
-                formData.append('categoria', this.selected || '');
-                formData.append('versaoAtual', this.versao || '');
-                formData.append('UsuarioId', this.idusuario);
-                formData.append('status', this.status === 'Ativo' ? 1 : 0); // Certifique-se de que o nome está correto
-
-                await axios.post('Documentos/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${token}`
-                    }
+                const response = await axios.get('Documentos/visualizar',);
+                this.iddocumento = response.data.IdDocumento;
+                this.nomeDocumento = response.data.nomeDocumento;
+                this.descricao = response.data.descricao;
+                this.versao = response.data.versao // Salvar todos os documentos em um array
+            } catch (error) {
+                alert('Erro ao buscar documentos: ' + error.response?.data || error.message);
+            }
+        },
+        async Alterar(){
+            try {
+                await axios.put(`editar/${this.iddocumento}`, {
+                    nome: this.nomeDocumento,
+                    descricao: this.descricao,
+                    versao: this.versao,
+                    categoria: this.selected || '',
+                    status: this.status === 'Ativo' ? 1 : 0
                 });
-
                 this.$router.push('/documentos');
             } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    alert('Sua sessão expirou. Por favor, faça login novamente.');
-                    //this.logout(); // Descomente se você estiver implementando logout
-                } else {
-                    console.error('Erro ao cadastrar documento:', error.response.data);
-                    alert('Erro ao cadastrar documento: ' + JSON.stringify(error.response.data));
-                }
+                alert('Falha no editar: ' + error.response.data);
             }
         },
         logout() {

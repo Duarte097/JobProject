@@ -57,7 +57,8 @@
                         <td>{{ documento.versaoAtual }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <div class="icon-container" @click="Editar(documento.idDocumento)">
+                                <div class="icon-container" @click="Editar">
+                                    <!--(documento.idDocumento)-->
                                     <span class="fa fa-pen pointer"></span>
                                 </div>
                             </div>
@@ -71,9 +72,9 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <button @click="Upload" class="header-btn">
-                                    <img src="../assets/Download.png" alt="Upload" class="icon"/>
-                                </button>
+                                <div class="icon-container" @click="Download">
+                                    <span class="fa fa-download pointer"></span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -91,7 +92,8 @@ export default {
     data() {
         return {
             nomeUsuario: "",
-            documento: [], // Array para armazenar os documentos
+            documento: [], 
+            papel: ""
         };
     },
     methods: {
@@ -99,7 +101,8 @@ export default {
             try {
                 const userId = localStorage.getItem('idUsuarios'); // Corrigido aqui
                 const response = await axios.get(`Usuarios/${userId}`);
-                this.nomeUsuario = response.data.nome; // Ajustado para "nomeUsuario"
+                this.nomeUsuario = response.data.nome;
+                this.papel = response.data.papel; // Ajustado para "nomeUsuario"
             } catch (error) {
                 alert('Erro ao buscar usuário: ' + error.response?.data || error.message);
             }
@@ -116,56 +119,32 @@ export default {
         triggerFileInput() {
             this.$refs.fileInput.click();
         },
-
-        // Função chamada quando o arquivo é selecionado
-        onFileChange(event) {
-            this.selectedFile = event.target.files[0];
-            if (this.selectedFile) {
-                this.uploadFile();
-            }
-        },
-        // Função de upload
-        async uploadFile() {
-            try {
-                if (!this.selectedFile) {
-                    alert('Nenhum arquivo selecionado');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('file', this.selectedFile);
-                formData.append('nome', 'Nome do Documento');
-                formData.append('descricao', 'Descrição do Documento');
-                formData.append('categoria', 'Categoria');
-                formData.append('versao', '1.0');
-
-                await axios.post('/documento/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-
-                alert('Upload realizado com sucesso');
-            } catch (error) {
-                alert('Erro ao fazer upload: ' + error.response?.data || error.message);
-            }
-        },
         confirmarDeletar(idDocumento) {
             if (confirm("Tem certeza que deseja deletar este documento?")) {
                 this.deletarDocumento(idDocumento);
             }
         },
-        async deletarDocumento(idDocumento) {
+        Download (){
+
+        },
+        async deletarDocumento(idDocumento,) {
+            //papel =  this.obterUsuarios();
+
+            console.log(this.papel);
             try {
-                await axios.delete(`documento/${idDocumento}`); // Corrigido para usar a rota correta
-                await this.obterDocumentos(); // Atualizar lista após a exclusão
+                await axios.delete(`Documentos/deletar/${idDocumento}`, {
+                    headers: {
+                        Papel: this.papel 
+                    }
+                });
+                await this.obterDocumentos(); 
                 alert('Documento deletado com sucesso.');
             } catch (error) {
                 alert('Erro ao deletar documento: ' + error.response?.data || error.message);
             }
         },
-        Editar(idDocumento) {
-            this.$router.push(`/documentos/editar/${idDocumento}`); // Redirecionar para página de edição
+        Editar() {
+            this.$router.push(`/editar`); // Redirecionar para página de edição
         },
         // Logout do usuário
         logout() {

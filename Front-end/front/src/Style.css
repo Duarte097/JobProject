@@ -341,6 +341,13 @@ color: red;
 .status-container {
     display: flex;
     justify-content: center; /* Centraliza os botões */
-    gap: 20px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
-    margin-top: 20px; /* Espaçamento superior para separação */
+    gap: 28px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
+    margin-top: 30px; /* Espaçamento superior para separação */
+}
+
+.categoria-container {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    gap: 5px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
+    margin-top: 30px; /* Espaçamento superior para separação */
 }

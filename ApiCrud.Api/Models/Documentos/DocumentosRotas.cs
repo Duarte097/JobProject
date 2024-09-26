@@ -24,7 +24,7 @@ namespace ApiCrud.Documentos
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files, [FromForm] DocumentosDTO documentoDto)
         {
-            var user = HttpContext.User;
+            //var user = HttpContext.User;
 
             // Verifica se o usuário está autenticado
             /*if (!user.Identity?.IsAuthenticated == true)
@@ -127,6 +127,77 @@ namespace ApiCrud.Documentos
                                         .ToListAsync();
 
             return Ok(documentos);
+        }
+
+        [HttpPut("editar/{id}")]
+        //[Authorize(Roles = "Administrador")]// Somente usuários autenticados podem editar
+        public async Task<IActionResult> Editar(int id, [FromBody] DocumentosDTO documentoDto)
+        {
+            var documento = await _context.Documentos.FindAsync(id);
+            if (documento == null)
+            {
+                return NotFound("Documento não encontrado.");
+            }
+
+            // Atualiza os campos do documento com base no DTO
+            documento.Nome = documentoDto.Nome;
+            documento.Descricao = documentoDto.Descricao;
+            documento.Categoria = documentoDto.Categoria;
+            documento.VersaoAtual = documentoDto.Versaoatual;
+
+            // Salva as alterações no banco de dados
+            _context.Documentos.Update(documento);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { documento.IdDocumento, documento.Nome, documento.Categoria, documento.VersaoAtual });
+        }
+
+        [HttpDelete("deletar/{id}")]
+        //[Authorize(Roles = "Administrador")] // Somente administradores podem deletar
+        public async Task<IActionResult> Deletar(int id)
+        {
+            var papel = HttpContext.Request.Headers["Papel"].ToString();
+
+            // Verifica se o papel é "Administrador"
+            if (papel != "Administrador")
+            {
+                return Forbid("Acesso negado. Somente administradores podem deletar.");
+            }
+            var documento = await _context.Documentos.FindAsync(id);
+            if (documento == null)
+            {
+                return NotFound("Documento não encontrado.");
+            }
+            // Verifica se o arquivo existe no sistema de arquivos
+            var filePath = documento.Caminho;
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath); // Deleta o arquivo fisicamente
+            }
+
+            // Remove o documento do banco de dados
+            _context.Documentos.Remove(documento);
+            await _context.SaveChangesAsync();
+
+            return Ok("Documento deletado com sucesso.");
+        }
+
+        [HttpPut("inativar/{id}")]
+        [Authorize(Roles = "Administrador")] // Somente administradores podem inativar
+        public async Task<IActionResult> Inativar(int id)
+        {
+            var documento = await _context.Documentos.FindAsync(id);
+            if (documento == null)
+            {
+                return NotFound("Documento não encontrado.");
+            }
+
+            // Marca o documento como inativo
+            documento.Status = Status.Inativo;
+            _context.Documentos.Update(documento);
+            await _context.SaveChangesAsync();
+
+            return Ok("Documento inativado com sucesso.");
         }
     }
 }
