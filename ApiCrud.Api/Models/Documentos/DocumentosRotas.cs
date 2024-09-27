@@ -24,20 +24,6 @@ namespace ApiCrud.Documentos
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files, [FromForm] DocumentosDTO documentoDto)
         {
-            //var user = HttpContext.User;
-
-            // Verifica se o usuário está autenticado
-            /*if (!user.Identity?.IsAuthenticated == true)
-            {
-                return Unauthorized();
-            }*/
-
-            // Obtém o ID do usuário autenticado usando o Claim
-            /*var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return BadRequest("Usuário não autenticado.");
-            }*/
             var usuarioId = documentoDto.UsuarioId;
 
             // Verifica se o ID do usuário é válido
@@ -91,7 +77,7 @@ namespace ApiCrud.Documentos
             return BadRequest("Arquivo inválido.");
         }
         [HttpGet("download/{id}")]
-        [Authorize] // Somente usuários autenticados podem fazer o download
+        //[Authorize] // Somente usuários autenticados podem fazer o download
         public async Task<IActionResult> Download(int id)
         {
             var documento = await _context.Documentos.FindAsync(id);
@@ -109,11 +95,22 @@ namespace ApiCrud.Documentos
                 return NotFound("Arquivo não encontrado.");
             }
 
-            // Retorna o arquivo para download
             var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-            return File(fileBytes, "application/octet-stream", Path.GetFileName(filePath));
+            var fileExtension = Path.GetExtension(filePath);
+            var mimeType = GetMimeType(fileExtension);
+            return File(fileBytes, mimeType, Path.GetFileName(filePath));
         }
 
+        private string GetMimeType(string extension)
+        {
+            switch (extension.ToLower())
+            {
+                case ".pdf": return "application/pdf";
+                case ".txt": return "text/plain";
+                case ".docx": return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                default: return "application/octet-stream"; 
+            }
+        }
 
         // Outros métodos (delete, inativar, etc.) permanecem os mesmos, sem alterações.
         // Exemplo de GET
@@ -133,6 +130,13 @@ namespace ApiCrud.Documentos
         //[Authorize(Roles = "Administrador")]// Somente usuários autenticados podem editar
         public async Task<IActionResult> Editar(int id, [FromBody] DocumentosDTO documentoDto)
         {
+            var usuarioId = documentoDto.UsuarioId;
+
+            // Verifica se o ID do usuário é válido
+            if (usuarioId <= 0)
+            {
+                return BadRequest("ID do usuário inválido.");
+            }
             var documento = await _context.Documentos.FindAsync(id);
             if (documento == null)
             {
@@ -144,12 +148,15 @@ namespace ApiCrud.Documentos
             documento.Descricao = documentoDto.Descricao;
             documento.Categoria = documentoDto.Categoria;
             documento.VersaoAtual = documentoDto.Versaoatual;
+            documento.Status = Status.Ativo;
+            documento.UsuarioId = usuarioId; // Associar o usuário logado
+
 
             // Salva as alterações no banco de dados
             _context.Documentos.Update(documento);
             await _context.SaveChangesAsync();
 
-            return Ok(new { documento.IdDocumento, documento.Nome, documento.Categoria, documento.VersaoAtual });
+            return Ok(new {documento.Nome, documento.Categoria, documento.VersaoAtual, documento.Status, documento.UsuarioId });
         }
 
         [HttpDelete("deletar/{id}")]

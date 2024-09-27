@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from '../auth';
+import UserService from '@/services/UsuariosService';
 import '../Style.css';
 
 export default {
@@ -45,12 +45,10 @@ export default {
         };
     },
     methods: {
-        async obterUsuarios() {
+        async carregarDados() {
             try {
-                const userId = localStorage.getItem('idUsuarios'); 
-                const response = await axios.get(`Usuarios/${userId}`); 
-                
-                this.nome = response.data.nome;
+                const usuario = await UserService.obterUsuarios();
+                this.nome = usuario.nome;
             } catch (error) {
                 alert('Erro ao buscar usuários: ' + error.response.data);
             }
@@ -67,7 +65,7 @@ export default {
         }
     },
     mounted() {
-        this.obterUsuarios();
+        this.carregarDados();
     }
 };
 </script>

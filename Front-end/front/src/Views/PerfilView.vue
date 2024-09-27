@@ -28,13 +28,13 @@
                         Alteração do usuario
                     </span>
                     <div class="wrap-input" :class="{'has-val' : nome !== ''}">
-                    <input class="input" type="text" v-model="nome" required />
-                    <span class="focus-input" data-placeholder="Nome"></span>
+                        <input class="input" type="text" v-model="nome" required />
+                        <span class="focus-input" data-placeholder="Nome"></span>
                     </div>
 
                     <div class="wrap-input" :class="{'has-val' : papel !== ''}">
-                    <input class="input" type="text" v-model="papel" required />
-                    <span class="focus-input" data-placeholder="Papel"></span>
+                        <input class="input" type="text" v-model="papel" required />
+                        <span class="focus-input" data-placeholder="Papel"></span>
                     </div>
                     <div class="wrap-input" :class="{'has-val' : password !== ''}">
                         <input class="input" type="password" v-model="password" required />
@@ -55,6 +55,7 @@
 <script>
 import axios from '../auth';
 import '../Style.css';
+import UserService from '@/services/UsuariosService';
 
 export default {
     data() {
@@ -65,16 +66,14 @@ export default {
         };
     },
     methods: {
-        async obterUsuarios() {
+        async carregarDados() {
             try {
-                const userId = localStorage.getItem('idUsuarios'); 
-                const response = await axios.get(`Usuarios/${userId}`); 
-                
-                this.nome = response.data.nome;
-                this.papel = response.data.papel;
-                this.password = response.data.senhaHash;
+                const usuario = await UserService.obterUsuarios();
+                this.nome = usuario.nome;
+                this.papel = usuario.papel;
+                this.password = usuario.senhaHash;
             } catch (error) {
-                alert('Erro ao buscar usuários: ' + error.response.data);
+                alert('Erro ao buscar usuários: ' + error);
             }
         },
         async Alterar(){
@@ -106,7 +105,7 @@ export default {
         }
     },
     mounted() {
-        this.obterUsuarios();
+        this.carregarDados();
     }
 };
 </script>

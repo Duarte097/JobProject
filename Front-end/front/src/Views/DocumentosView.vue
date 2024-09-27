@@ -41,7 +41,7 @@
                         <th scope="col">Descrição</th>
                         <th scope="col">Categoria</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Versão Atual</th>
+                        <th scope="col">Versão</th>
                         <th scope="col" class="text-center">Editar</th>
                         <th scope="col" >Deletar</th>
                         <th scope="col">Download</th>
@@ -57,7 +57,7 @@
                         <td>{{ documento.versaoAtual }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <div class="icon-container" @click="Editar">
+                                <div class="icon-container" @click="Editar(documento.idDocumento)">
                                     <!--(documento.idDocumento)-->
                                     <span class="fa fa-pen pointer"></span>
                                 </div>
@@ -72,7 +72,7 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <div class="icon-container" @click="Download">
+                                <div class="icon-container" @click="Download(documento.idDocumento, documento.nome)">
                                     <span class="fa fa-download pointer"></span>
                                 </div>
                             </div>
@@ -85,72 +85,50 @@
 </template>
 
 <script>
-import axios from '../auth';
-import '../Style.css';
+import DocumentosService from '@/services/DocumentosService';
+import UserService from '@/services/UsuariosService';
+
 
 export default {
     data() {
         return {
             nomeUsuario: "",
-            documento: [], 
-            papel: ""
+            documentos: [],
         };
     },
     methods: {
-        async obterUsuarios() {
+        async carregarDados() {
             try {
-                const userId = localStorage.getItem('idUsuarios'); // Corrigido aqui
-                const response = await axios.get(`Usuarios/${userId}`);
-                this.nomeUsuario = response.data.nome;
-                this.papel = response.data.papel; // Ajustado para "nomeUsuario"
+                const usuario = await UserService.obterUsuarios();
+                this.nomeUsuario = usuario.nome;
+                
+                const documentos = await DocumentosService.obterDocumentos();
+                this.documentos = documentos;
             } catch (error) {
-                alert('Erro ao buscar usuário: ' + error.response?.data || error.message);
+                alert(error.message);
             }
         },
-        // Obter todos os documentos da API
-        async obterDocumentos() {
+        async deletarDocumento(idDocumento) {
             try {
-                const response = await axios.get('Documentos/visualizar');
-                this.documentos = response.data; // Salvar todos os documentos em um array
+                const sucesso = await DocumentosService.deletarDocumento(idDocumento);
+                if (sucesso) {
+                    this.documentos = await DocumentosService.obterDocumentos(); // Atualizar a lista de documentos
+                    alert('Documento deletado com sucesso.');
+                }
             } catch (error) {
-                alert('Erro ao buscar documentos: ' + error.response?.data || error.message);
+                alert(error.message);
             }
         },
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-        confirmarDeletar(idDocumento) {
-            if (confirm("Tem certeza que deseja deletar este documento?")) {
-                this.deletarDocumento(idDocumento);
-            }
-        },
-        Download (){
-
-        },
-        async deletarDocumento(idDocumento,) {
-            //papel =  this.obterUsuarios();
-
-            console.log(this.papel);
+        async Download(idDocumento, nome) {
             try {
-                await axios.delete(`Documentos/deletar/${idDocumento}`, {
-                    headers: {
-                        Papel: this.papel 
-                    }
-                });
-                await this.obterDocumentos(); 
-                alert('Documento deletado com sucesso.');
+                await DocumentosService.Download(idDocumento, nome);
+                alert('Download iniciado.');
             } catch (error) {
-                alert('Erro ao deletar documento: ' + error.response?.data || error.message);
+                alert('Erro ao baixar documento: ' + error.message);
             }
         },
-        Editar() {
-            this.$router.push(`/editar`); // Redirecionar para página de edição
-        },
-        // Logout do usuário
-        logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            this.$router.push('/');
+        Editar(idDocumento) {
+            this.$router.push(`/editar/${idDocumento}`);
         },
         goToProfile() {
             this.$router.push('/perfil');
@@ -163,20 +141,10 @@ export default {
         },
         carregarArquivo(){
             this.$router.push('/uploadArquivo');
-        },
-        addTask() {
-            if (this.newTask) {
-                // Lógica para adicionar uma nova tarefa ou similar
-                this.newTask = ''; // Limpar o campo após adicionar
-            }
-        },
-        ChangeStatus() {
-            // Implementar lógica para mudar o status do documento
         }
     },
     mounted() {
-        this.obterDocumentos(); // Carregar documentos ao montar o componente
-        this.obterUsuarios();   // Carregar usuário ao montar o componente
+        this.carregarDados();
     }
 };
 </script>

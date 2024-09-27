@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="container-login-form-btn">
-                        <button type="submit" class="login-form-btn">Salvar</button>
+                        <button type="submit" @click.prevent="Alterar(documento.idDocumento)" class="login-form-btn">Salvar</button>
                     </div>
                     <div class="text=center">
                         <a @click.prevent="documentos" href="#" class="txt1">Cancelar</a>
@@ -79,6 +79,9 @@
 <script>
 import axios from '../auth';
 import '../Style.css';
+import DocumentosService from '@/services/DocumentosService';
+import UserService from '@/services/UsuariosService';
+
 
 export default {
     data() {
@@ -91,7 +94,8 @@ export default {
             status: "",
             versao: "",
             idusuario:"",
-            selected: ""
+            selected: "",
+            documento: [],
         };
     },
     methods: {
@@ -108,26 +112,52 @@ export default {
                 console.log("Nenhum arquivo selecionado");
             }
         },
-        async obterDocumentos() {
+        async carregarDados() {
             try {
-                const response = await axios.get('Documentos/visualizar',);
-                this.iddocumento = response.data.IdDocumento;
-                this.nomeDocumento = response.data.nomeDocumento;
-                this.descricao = response.data.descricao;
-                this.versao = response.data.versao // Salvar todos os documentos em um array
+                const userId = localStorage.getItem('idUsuarios'); 
+                const usuario = await UserService.obterUsuarios();
+                this.nomeUsuario = usuario.nome;
+                this.idusuario = userId;
+                
+                const documentos = await DocumentosService.obterDocumentos();
+                this.documentos = documentos;
+                this.iddocumento = documentos.idDocumento;
+                this.nomeDocumento = documentos.nomeDocumento;
+                this.descricao = documentos.descricao;
+                this.categoria = documentos.categoria;
+                this.status = documentos.status;
             } catch (error) {
-                alert('Erro ao buscar documentos: ' + error.response?.data || error.message);
+                alert(error.message);
             }
         },
-        async Alterar(){
+        async Alterar(idDocumento){
             try {
-                await axios.put(`editar/${this.iddocumento}`, {
-                    nome: this.nomeDocumento,
-                    descricao: this.descricao,
-                    versao: this.versao,
-                    categoria: this.selected || '',
-                    status: this.status === 'Ativo' ? 1 : 0
+                console.log(idDocumento);
+                const formData = new FormData();
+                const userId = localStorage.getItem('idUsuarios'); 
+                const token = localStorage.getItem('token');
+
+                this.idusuario = userId;
+                formData.append("nome", this.nomeDocumento);
+                formData.append("descricao", this.descricao);
+                formData.append("versao", this.versao);
+                formData.append("categoria", this.selected || '');
+                formData.append('UsuarioId', this.idusuario);
+                formData.append("status", this.status === 'Ativo' ? 1 : 0);
+
+                // Adicionar o arquivo ao FormData, caso tenha sido selecionado
+                const file = this.$refs.fileInput.files[0];
+                if (file) {
+                    formData.append("file", file);
+                }
+                
+                await axios.put(`Documentos/editar/${idDocumento}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
+                
                 this.$router.push('/documentos');
             } catch (error) {
                 alert('Falha no editar: ' + error.response.data);
@@ -147,24 +177,9 @@ export default {
         documentos() {
             this.$router.push('/documentos');
         },
-        async obterUsuarios() {
-            try {
-                const token = localStorage.getItem('token');
-                const userId = localStorage.getItem('idUsuarios'); 
-                const response = await axios.get(`Usuarios/${userId}`); 
-
-                if (!token) {
-                    this.$router.push('/');
-                    return;
-                }
-                this.nome = response.data.nome;
-            } catch (error) {
-                alert('Erro ao buscar usuários: ' + error.response.data);
-            }
-        }
     },
     mounted() {
-        this.obterUsuarios();
+        this.carregarDados();
     }
 };
 </script>

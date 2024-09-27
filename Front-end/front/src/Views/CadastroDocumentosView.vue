@@ -79,6 +79,7 @@
 <script>
 import axios from '../auth';
 import '../Style.css';
+import UserService from '@/services/UsuariosService';
 
 export default {
     data() {
@@ -165,24 +166,17 @@ export default {
         documentos() {
             this.$router.push('/documentos');
         },
-        async obterUsuarios() {
+        async carregarDados() {
             try {
-                const token = localStorage.getItem('token');
-                const userId = localStorage.getItem('idUsuarios'); 
-                const response = await axios.get(`Usuarios/${userId}`); 
-
-                if (!token) {
-                    this.$router.push('/');
-                    return;
-                }
-                this.nome = response.data.nome;
+                const usuario = await UserService.obterUsuarios();
+                this.nome = usuario.nome;
             } catch (error) {
                 alert('Erro ao buscar usuários: ' + error.response.data);
             }
         }
     },
     mounted() {
-        this.obterUsuarios();
+        this.carregarDados();
     }
 };
 </script>
