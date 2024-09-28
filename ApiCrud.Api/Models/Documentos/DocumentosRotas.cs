@@ -26,7 +26,7 @@ namespace ApiCrud.Documentos
         {
             var usuarioId = documentoDto.UsuarioId;
 
-            // Verifica se o ID do usuário é válido
+       
             if (usuarioId <= 0)
             {
                 return BadRequest("ID do usuário inválido.");
@@ -55,7 +55,8 @@ namespace ApiCrud.Documentos
                     await formFile.CopyToAsync(stream);
                 }
 
-                // Criar o documento a partir do DTO
+
+ 
                 var documento = new Documento
                 {
                     Nome = documentoDto.Nome,
@@ -77,7 +78,6 @@ namespace ApiCrud.Documentos
             return BadRequest("Arquivo inválido.");
         }
         [HttpGet("download/{id}")]
-        //[Authorize] // Somente usuários autenticados podem fazer o download
         public async Task<IActionResult> Download(int id)
         {
             var documento = await _context.Documentos.FindAsync(id);
@@ -86,10 +86,10 @@ namespace ApiCrud.Documentos
                 return NotFound();
             }
 
-            // O caminho do arquivo foi salvo no banco de dados
+
             var filePath = documento.Caminho;
 
-            // Verifica se o arquivo existe
+    
             if (!System.IO.File.Exists(filePath))
             {
                 return NotFound("Arquivo não encontrado.");
@@ -98,7 +98,8 @@ namespace ApiCrud.Documentos
             var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
             var fileExtension = Path.GetExtension(filePath);
             var mimeType = GetMimeType(fileExtension);
-            return File(fileBytes, mimeType, Path.GetFileName(filePath));
+            var fileName = $"{documento.Nome}{fileExtension}";
+            return File(fileBytes, mimeType, fileName);
         }
 
         private string GetMimeType(string extension)
@@ -112,12 +113,11 @@ namespace ApiCrud.Documentos
             }
         }
 
-        // Outros métodos (delete, inativar, etc.) permanecem os mesmos, sem alterações.
         // Exemplo de GET
         [HttpGet("visualizar")]
         public async Task<IActionResult> Visualizar([FromServices] AppDbContext context, int pageNumber = 1, int pageSize = 10)
         {
-            // Paginação: salta e pega apenas um número limitado de resultados
+    
             var documentos = await context.Documentos
                                         .Skip((pageNumber - 1) * pageSize)
                                         .Take(pageSize)
@@ -126,46 +126,53 @@ namespace ApiCrud.Documentos
             return Ok(documentos);
         }
 
+        //GET de um documento
+        [HttpGet("visualizaId/{id}")]
+        public async Task<IActionResult> VisualizarId(int id, [FromServices] AppDbContext context)
+        {
+            
+            var documentos = await context.Documentos.FindAsync(id);
+            return Ok(documentos);
+        }
+
         [HttpPut("editar/{id}")]
-        //[Authorize(Roles = "Administrador")]// Somente usuários autenticados podem editar
+
         public async Task<IActionResult> Editar(int id, [FromBody] DocumentosDTO documentoDto)
         {
             var usuarioId = documentoDto.UsuarioId;
 
-            // Verifica se o ID do usuário é válido
+
             if (usuarioId <= 0)
             {
                 return BadRequest("ID do usuário inválido.");
             }
-            var documento = await _context.Documentos.FindAsync(id);
+            
+            var documento = await _context.Documentos.SingleOrDefaultAsync(u => u.IdDocumento == id);
             if (documento == null)
             {
                 return NotFound("Documento não encontrado.");
             }
-
-            // Atualiza os campos do documento com base no DTO
+            
             documento.Nome = documentoDto.Nome;
             documento.Descricao = documentoDto.Descricao;
             documento.Categoria = documentoDto.Categoria;
-            documento.VersaoAtual = documentoDto.Versaoatual;
-            documento.Status = Status.Ativo;
-            documento.UsuarioId = usuarioId; // Associar o usuário logado
+            documento.Status = (Status)documentoDto.Status;
+            documento.UsuarioId = usuarioId; 
 
 
-            // Salva as alterações no banco de dados
+
             _context.Documentos.Update(documento);
             await _context.SaveChangesAsync();
 
-            return Ok(new {documento.Nome, documento.Categoria, documento.VersaoAtual, documento.Status, documento.UsuarioId });
+            return Ok(new {documento.Nome,documento.Descricao, documento.Categoria, documento.VersaoAtual, documento.Status, documento.UsuarioId });
         }
 
         [HttpDelete("deletar/{id}")]
-        //[Authorize(Roles = "Administrador")] // Somente administradores podem deletar
+
         public async Task<IActionResult> Deletar(int id)
         {
             var papel = HttpContext.Request.Headers["Papel"].ToString();
 
-            // Verifica se o papel é "Administrador"
             if (papel != "Administrador")
             {
                 return Forbid("Acesso negado. Somente administradores podem deletar.");
@@ -175,14 +182,14 @@ namespace ApiCrud.Documentos
             {
                 return NotFound("Documento não encontrado.");
             }
-            // Verifica se o arquivo existe no sistema de arquivos
+
             var filePath = documento.Caminho;
             if (System.IO.File.Exists(filePath))
             {
-                System.IO.File.Delete(filePath); // Deleta o arquivo fisicamente
+                System.IO.File.Delete(filePath);
             }
 
-            // Remove o documento do banco de dados
+
             _context.Documentos.Remove(documento);
             await _context.SaveChangesAsync();
 
@@ -190,7 +197,7 @@ namespace ApiCrud.Documentos
         }
 
         [HttpPut("inativar/{id}")]
-        [Authorize(Roles = "Administrador")] // Somente administradores podem inativar
+        [Authorize(Roles = "Administrador")] 
         public async Task<IActionResult> Inativar(int id)
         {
             var documento = await _context.Documentos.FindAsync(id);
@@ -199,7 +206,7 @@ namespace ApiCrud.Documentos
                 return NotFound("Documento não encontrado.");
             }
 
-            // Marca o documento como inativo
+     
             documento.Status = Status.Inativo;
             _context.Documentos.Update(documento);
             await _context.SaveChangesAsync();

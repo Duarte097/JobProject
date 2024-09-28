@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using ApiCrud.Api.Models;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ApiCrud.Models 
 {
@@ -31,11 +32,12 @@ namespace ApiCrud.Models
         [MaxLength(500)]
         public string? Caminho { get; set; }
 
+        [BindNever]
         [MaxLength(10)]
-        public string? VersaoAtual { get; set; }
+        public string? VersaoAtual { get; set; } = "1.0";
 
         [ForeignKey("Usuarios")]
-        public int UsuarioId { get; set; } // O usuário será setado automaticamente na controller, sem precisar ser passado na requisição.
+        public int UsuarioId { get; set; }
 
         [Required]
         [EnumDataType(typeof(Status))]
@@ -55,7 +57,7 @@ namespace ApiCrud.Models
             this.Caminho = caminho;
             this.VersaoAtual = versaoatual;
             this.Categoria = categoria;
-            // Removemos a associação do usuário aqui, pois será definido na camada Controller
+   
         }
 
         public Documento() { }

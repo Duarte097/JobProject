@@ -1,60 +1,42 @@
 using ApiCrud.Data;
 using ApiCrud.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiCrud.Permisao
+[ApiController]
+[Route("api/[controller]")]
+public class PermissaoRotas : ControllerBase
 {
-    public static class PermissaoRotas{
-        public static void AddRotasPermissao(this WebApplication app){
-            var rotaspermissao = app.MapGroup("permissao");
-            
-            // POST
-            rotaspermissao.MapPost("", async (AddPermissaoRequest request, AppDbContext context) => {
-                var novaPermissao = new Permissao(
-                    request.Permissaotipo,
-                    request.Usuarioid,
-                    request.Documentoid
+    private readonly AppDbContext _context;
 
-                );
-                context.Permissao.Add(novaPermissao); 
-                await context.SaveChangesAsync();
-                return Results.Created($"/permissao/{novaPermissao.IdPermissao}", novaPermissao);
-            });
-
-            //GET
-            rotaspermissao.MapGet("{id}", async (int id, AppDbContext context) => {
-                var permissao= await context.Permissao.FindAsync(id);
-                return permissao is not null ? Results.Ok(permissao) : Results.NotFound();
-            });
-
-            //Update Documento
-            rotaspermissao.MapPut("{id}", async (int id, UpdatePermissao request, AppDbContext context, CancellationToken ct) => 
-            {
-                var permissao = await context.Permissao.SingleOrDefaultAsync(permissao=> permissao.IdPermissao == id, ct);
-
-                if(permissao == null)
-                    return Results.NotFound();
-                
-                permissao.Permissaotipo = request.permissaotipo;
-
-                await context.SaveChangesAsync(ct);
-                return Results.Ok(new PermissaoDTO(permissao.Permissaotipo));
-            });
-
-            //Delete
-            rotaspermissao.MapDelete("{id}", async (int id, AppDbContext context, CancellationToken ct) =>
-            {
-                var permissao = await context.Permissao.SingleOrDefaultAsync(permissao => permissao.IdPermissao == id, ct);
-
-                if(permissao == null)
-                    return Results.NotFound();
-
-                //permissao.Desativar();
-
-                await context.SaveChangesAsync(ct);
-                return Results.Ok();
-            });
-        }
+    public PermissaoRotas(AppDbContext context)
+    {
+        _context = context;
     }
 
+    [HttpPost("atribuir")]
+    public async Task<IActionResult> AtribuirPermissao([FromBody] Permissao permissao)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        _context.Permissao.Add(permissao);
+        await _context.SaveChangesAsync();
+
+        return Ok(permissao);
+    }
+
+    [HttpGet("usuario/{usuarioId}/documento/{documentoId}")]
+    public async Task<IActionResult> ObterPermissao(int usuarioId, int documentoId)
+    {
+        var permissao = await _context.Permissao
+            .FirstOrDefaultAsync(p => p.UsuarioId == usuarioId && p.DocumentoId == documentoId);
+
+        if (permissao == null)
+            return NotFound();
+
+        return Ok(permissao);
+    }
+
+    // Outros endpoints para editar e remover permissões...
 }

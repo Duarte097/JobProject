@@ -6,8 +6,8 @@ public record DocumentosDTO
 (
     string Nome,
     string Descricao, 
-    string Status,
-    string Versaoatual,
     string Categoria,
+    string Versaoatual,
+    Status Status,
     int UsuarioId
 );

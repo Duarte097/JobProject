@@ -53,7 +53,7 @@
                         <td>{{ documento.nome }}</td>
                         <td>{{ documento.descricao }}</td>
                         <td>{{ documento.categoria }}</td>
-                        <td>{{ documento.status }}</td>
+                        <td>{{ this.status }}</td>
                         <td>{{ documento.versaoAtual }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
@@ -93,6 +93,7 @@ export default {
     data() {
         return {
             nomeUsuario: "",
+            status:"",
             documentos: [],
         };
     },
@@ -101,9 +102,19 @@ export default {
             try {
                 const usuario = await UserService.obterUsuarios();
                 this.nomeUsuario = usuario.nome;
+                this.papel = usuario.papel;
                 
                 const documentos = await DocumentosService.obterDocumentos();
                 this.documentos = documentos;
+                this.status = documentos.status;
+                if(this.status == 0)
+                {
+                    this.status = 'Inativo'
+                    
+                }else
+                {
+                    this.status = 'Ativo'
+                }
             } catch (error) {
                 alert(error.message);
             }
@@ -127,8 +138,14 @@ export default {
                 alert('Erro ao baixar documento: ' + error.message);
             }
         },
-        Editar(idDocumento) {
-            this.$router.push(`/editar/${idDocumento}`);
+        async Editar(idDocumento) {
+            if(this.papel == "Usuario"){
+                alert("Usuarios não tem permissão para editar documentos.");
+            }else
+            {
+                this.$router.push(`/editar/${idDocumento}`);
+            }
+            
         },
         goToProfile() {
             this.$router.push('/perfil');

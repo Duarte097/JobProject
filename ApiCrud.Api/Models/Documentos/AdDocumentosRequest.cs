@@ -1,3 +1,4 @@
+using ApiCrud.Models;
 namespace ApiCrud.Documentos;
 
 public record AddDocumentosRequest(
@@ -6,6 +7,6 @@ public record AddDocumentosRequest(
     string Categoria,
     string Caminho,
     string Versao,
-    int UsuarioId
-    //string Status
+    int UsuarioId,
+    Status Status
 );

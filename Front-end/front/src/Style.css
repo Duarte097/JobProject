@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-/* Login Page Styles */
+
 .container-login {
     width: 100%;
     min-height: 100vh;
@@ -44,6 +44,13 @@ color: red;
     font-size: 30px;
     color: azure;
     line-height: 1.2;
+    text-align: center;
+}
+.home-form-title {
+    display: block;
+    font-size: 30px;
+    color: azure;
+    line-height: 3.5;
     text-align: center;
 }
 
@@ -100,7 +107,7 @@ color: red;
     top: 16px;
     left: 0px;
     padding-left: 5px;
-    transition: all 0.4s;
+    transition: all 0.4s ease;
 }
 
 .input:focus {
@@ -114,6 +121,7 @@ color: red;
 .input:focus + .focus-input::before {
     width: 100%;
 }
+
 
 .has-val + .focus-input::after {
     top: -15px;
@@ -150,7 +158,7 @@ color: red;
     cursor: pointer;
 }
 
-/* Text Styles */
+
 .text-center {
     display: flex;
     justify-content: center;
@@ -178,8 +186,8 @@ color: red;
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
-    align-items: left;
-    justify-content: left;
+    align-items: center;
+    justify-content: center;
     padding: 5px;
     background-color: #111;
 }
@@ -217,55 +225,55 @@ color: red;
 }
 
 .header {
-    background-color: #333; /* Cor de fundo da barra */
-    padding: 10px 20px; /* Espaçamento interno */
+    background-color: #333; 
+    padding: 10px 20px; 
     display: flex;
-    justify-content: space-between; /* Espaça os itens para os lados */
-    align-items: center; /* Alinha verticalmente ao centro */
-    color: white; /* Cor do texto */
+    justify-content: space-between; 
+    align-items: center; 
+    color: white; 
 }
 
 .header-container {
     display: flex;
-    align-items: center; /* Alinha verticalmente ao centro */
+    align-items: center; 
     flex: 1;
 }
 
 .header-container2 {
     display: flex;
-    align-items: center; /* Alinha verticalmente ao centro */
+    align-items: center; 
 }
 .username {
-    margin-right: 20px; /* Espaçamento entre o nome e os botões */
+    margin-right: 20px; 
 }
 
 .header-buttons {
     display: flex;
-    gap: 10px; /* Espaçamento entre os botões */
+    gap: 10px; 
     margin-left: auto;
 }
 
 .header-btn {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza o ícone e o texto */
-    width: 40px; /* Ajuste conforme necessário */
-    height: 40px; /* Ajuste conforme necessário */
-    background-color: #333; /* Cor de fundo do botão */
-    border: none; /* Remove a borda */
-    border-radius: 15px; /* Arredonda os cantos */
-    cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+    justify-content: center; 
+    width: 40px; 
+    height: 40px; 
+    background-color: #333; 
+    border: none; 
+    border-radius: 15px;
+    cursor: pointer; 
 }
 
 .icon {
-    width: 100%; /* Faz a imagem ocupar 100% da largura do botão */
-    height: 100%; /* Faz a imagem ocupar 100% da altura do botão */
-    object-fit: cover; /* Mantém a proporção da imagem */
-    margin-right: 5px; /* Espaçamento entre o ícone e o texto */
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    margin-right: 5px; 
 }
 
 .header-btn span {
-    display: none; /* Esconde o texto para usar apenas o ícone */
+    display: none; 
 }
 
 
@@ -306,7 +314,7 @@ color: red;
 
 
 .perfil-form-btn {
-    font-size: 10px;
+    font-size: 12px;
     border: none;
     border-radius: 8px;
     color: #fff;
@@ -315,7 +323,7 @@ color: red;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 110%;
+    padding: 0 20px;
     height: 28px;
     background: linear-gradient(to left, #21d4fd, #b721ff);
 }
@@ -324,30 +332,57 @@ color: red;
     cursor: pointer;
 }
 .custom-table {
-    width: 90%; /* Ajusta a largura da tabela (pode ser % ou px) */
-    font-size: 15px; /* Diminui o tamanho da fonte */
-    table-layout: auto; /* Ajusta o layout da tabela */
+    width: 90%; 
+    font-size: 15px; 
+    table-layout: auto; 
 }
 
 .custom-table th, .custom-table td {
-    padding: 5px 10px; /* Diminui o espaço dentro das células */
-    margin: 0; /* Remove margem, se houver */
+    padding: 5px 10px;
+    margin: 0; 
 }
 
 .icon-container {
-    margin-right: 10px; /* Ajuste o valor conforme necessário */
+    margin-right: 10px; 
 }
 
 .status-container {
     display: flex;
-    justify-content: center; /* Centraliza os botões */
-    gap: 28px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
-    margin-top: 30px; /* Espaçamento superior para separação */
+    justify-content: center;
+    gap: 28px; 
+    margin-top: 30px; 
 }
 
 .categoria-container {
     display: flex;
-    justify-content: center; /* Centraliza os botões */
-    gap: 5px; /* Define o espaço entre os botões, ajuste o valor conforme necessário */
-    margin-top: 30px; /* Espaçamento superior para separação */
+    justify-content: center; 
+    gap: 5px; 
+    margin-top: 30px; 
 }
+
+.banner {
+    background-size: cover;
+    text-align: center;
+    padding: 50px 10;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 10 auto;
+  }
+  
+  
+  h1 {
+    font-size: 36px;
+    color: #333;
+  }
+  
+  h2 {
+    font-size: 24px;
+    color: #666;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #999;
+  }

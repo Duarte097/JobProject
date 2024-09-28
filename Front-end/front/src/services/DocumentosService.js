@@ -10,6 +10,9 @@ class  DocumentosService {
     // Método para obter todos os documentos
     async obterDocumentos() {
         try {
+            const userId = localStorage.getItem('idUsuarios'); 
+            const usuario = await axios.get(`Usuarios/${userId}`);
+            this.papel = usuario.data.papel;
             const response = await axios.get('Documentos/visualizar');
             this.documentos = response.data;
             return response.data;
@@ -28,7 +31,7 @@ class  DocumentosService {
             });
             return true;
         } catch (error) {
-            throw new Error('Erro ao deletar documento: ' + error.response?.data || error.message);
+            alert("Usuarios não tem permissão para deletar documentos.");
         }
     }
 

@@ -73,8 +73,8 @@ app.MapControllers();
 //app.AddRotasDocumentos();
 //app.DocumentosController();
 app.AddRotasUsuarios();
-app.AddRotasPermissao();
-app.AddRotasVersaoDoc();
+//app.AddRotasPermissao();
+//app.AddRotasVersaoDoc();
 app.AddRotasLogin(); // Uncomment if using login
 
 app.Run();

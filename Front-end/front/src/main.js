@@ -18,7 +18,7 @@ const routes = [
     { path: '/documentos', component: DocumentosView},
     { path: '/uploadArquivo', component: UploadArquivo},
     { path: '/perfil', component: PerfilView},
-    { path: '/editar', component: EditarDocumento},
+    { path: '/editar/:idDocumento', component: EditarDocumento},
     { path: '/home', component: HomeView, meta: { requiresAuth: true } },
     // Outras rotas...
   ];

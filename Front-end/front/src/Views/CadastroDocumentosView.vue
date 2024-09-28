@@ -31,10 +31,10 @@
                         <input class="input" type="text" v-model="descricao" required />
                         <span class="focus-input" data-placeholder="Descrição"></span>
                     </div>
-                    <div class="wrap-input" :class="{'has-val' : versao !== ''}">
+                    <!--div class="wrap-input" :class="{'has-val' : versao !== ''}">
                         <input class="input" type="text" v-model="versao" required />
                         <span class="focus-input" data-placeholder="Versão"></span>
-                    </div>
+                    </div-->
                     <div class="wrap-input">
                         <div class="categoria-container" style="color: gray">
                             <div >Categoria: </div>
@@ -102,7 +102,7 @@ export default {
         onFileChange(event) {
             const file = event.target.files[0];
             if (file) {
-                this.nomeDocumento = file.name; // Puxa o nome do arquivo selecionado
+                this.nomeDocumento = file.name; 
                 console.log("Arquivo selecionado:", this.nomeDocumento);
             } else {
                 console.log("Nenhum arquivo selecionado");
@@ -114,25 +114,23 @@ export default {
                 const userId = localStorage.getItem('idUsuarios'); 
                 const token = localStorage.getItem('token');
                 
-                // O nome do documento será o nome do arquivo selecionado
+
                 const file = this.$refs.fileInput.files[0];
                 if (file) {
-                    formData.append('file', file);  // certifique-se que o nome corresponde ao que o backend espera
-                    formData.append('nome', this.nomeDocumento || file.name); // Nome do documento pode ser o nome definido pelo usuário ou pelo arquivo
+                    formData.append('file', file); 
+                    formData.append('nome', this.nomeDocumento || file.name); 
                 } else {
                     alert("Por favor, selecione um arquivo antes de fazer o upload.");
                     return;
                 }
 
                 this.idusuario = userId;
-                // Não precisa adicionar o UsuarioId, pois será recuperado no backend
-                formData.append('files', file);  // Para o arquivo
+                formData.append('files', file);  
                 formData.append('nome', this.nomeDocumento || file.name);
                 formData.append('descricao', this.descricao || '');
                 formData.append('categoria', this.selected || '');
-                formData.append('versaoAtual', this.versao || '');
                 formData.append('UsuarioId', this.idusuario);
-                formData.append('status', this.status === 'Ativo' ? 1 : 0); // Certifique-se de que o nome está correto
+                formData.append('status', this.status === 'Ativo' ? 1 : 0); 
 
                 await axios.post('Documentos/upload', formData, {
                     headers: {
@@ -145,7 +143,6 @@ export default {
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     alert('Sua sessão expirou. Por favor, faça login novamente.');
-                    //this.logout(); // Descomente se você estiver implementando logout
                 } else {
                     console.error('Erro ao cadastrar documento:', error.response.data);
                     alert('Erro ao cadastrar documento: ' + JSON.stringify(error.response.data));
