@@ -45,8 +45,8 @@
           email: this.email,
           senhaHash: this.password
         });
-        //localStorage.setItem('token', response.data.Token);
-        localStorage.setItem('token', response.data.Token || response.data.token); // Ajuste conforme a resposta
+        alert('Login feito com sucesso!!');
+        localStorage.setItem('token', response.data.Token || response.data.token); 
         console.log('token:', localStorage.getItem('token'));
         localStorage.setItem('idUsuarios', response.data.user.idUsuarios);
         this.$router.push('/home');

@@ -123,12 +123,13 @@ export default {
                     alert("Por favor, selecione um arquivo antes de fazer o upload.");
                     return;
                 }
-
+                this.versao = "1.0";
                 this.idusuario = userId;
                 formData.append('files', file);  
                 formData.append('nome', this.nomeDocumento || file.name);
                 formData.append('descricao', this.descricao || '');
                 formData.append('categoria', this.selected || '');
+                formData.append('VersaoAtual', this.versao);
                 formData.append('UsuarioId', this.idusuario);
                 formData.append('status', this.status === 'Ativo' ? 1 : 0); 
 
@@ -138,7 +139,7 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
+                alert('Documento cadastrado com sucesso!!');
                 this.$router.push('/documentos');
             } catch (error) {
                 if (error.response && error.response.status === 401) {

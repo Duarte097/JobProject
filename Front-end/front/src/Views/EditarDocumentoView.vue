@@ -125,45 +125,23 @@
                 try {
                     console.log(idDocumento)
                     const documento = await axios.get(`Documentos/visualizaId/${idDocumento}`);
-                    console.log(documento.data.nome);
                     this.documentos = documento.data;
                     this.nomeDocumento = documento.data.nome;
-                    this.descricao = documento.Descricao;
-                    this.selected = documento.Categoria;
+                    this.descricao = documento.data.descricao;
+                    this.selected = documento.data.categoria;
                     this.status = documento.status === 1 ? 'Inativo' : 'Ativo'; 
-                    this.versao = documento.VersaoAtual;
+                    this.versao = documento.versao;
 
-                    console.log(this.documentos);
+                    alert('Alterações feitas com sucesso!!');
                 } catch (error) {
                     throw new Error('Erro ao buscar documentos: ' + error.documentos?.data || error.message);
                 }
             },
             async Alterar(idDocumento) {
                 try {
-                    //const formData = new FormData();
                     const userId = localStorage.getItem('idUsuarios'); 
                     const token = localStorage.getItem('token');
 
-                    
-                    // Preencher os dados do FormData
-                    /*formData.append("Nome", this.nomeDocumento);
-                    formData.append("Descricao", this.descricao);
-                    formData.append("Categoria", this.selected || '');
-                    formData.append("VersaoAtual", this.versao);
-                    formData.append("Status", this.status === 'Ativo' ? 1 : 0);
-                    formData.append('UsuarioId', userId); // O ID do usuário deve ser obtido do localStorage*/
-
-                    // Adicionar o arquivo ao FormData, caso tenha sido selecionado
-                    /*const file = this.$refs.fileInput.files[0];
-                    if (file) {
-                        formData.append("file", file); // Adiciona o arquivo ao FormData
-                    }*/
-                /*if(this.status == 'Ativo')
-                {
-                        this.status = 0;
-                }else{
-                        this.status = 1;
-                }*/
                     const data = {
                         Nome: this.nomeDocumento,
                         Descricao: this.descricao,
@@ -174,8 +152,6 @@
                     console.log(this.nomeDocumento, this.descricao, this.selected, this.status, userId);
                     await axios.put(`Documentos/editar/${idDocumento}`, data, {
                         headers: {
-                            //'Content-Type': 'multipart/form-data',
-                            //'Content-Type': 'application/x-www-form-urlencoded',
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         }
@@ -205,7 +181,10 @@
         },
         mounted() {
             this.idDocumento = this.$route.params.idDocumento;
-            this.obterUmDocumento(this.idDocumento);
+            this.$nextTick(() => {
+                this.obterUmDocumento(this.idDocumento);
+                this.carregarDados();
+            });
             this.carregarDados();
         }
     };

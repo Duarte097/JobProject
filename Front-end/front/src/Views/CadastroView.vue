@@ -10,10 +10,10 @@
                   <span class="focus-input" data-placeholder="Nome"></span>
                 </div>
 
-                <div class="wrap-input" :class="{'has-val' : papel !== ''}">
+                <!--div class="wrap-input" :class="{'has-val' : papel !== ''}">
                   <input class="input" type="text" v-model="papel" required />
                   <span class="focus-input" data-placeholder="Papel"></span>
-                </div>
+                </div-->
                 <div class="wrap-input" :class="{'has-val' : email !== ''}">
                     <input class="input" type="email" v-model="email" required />
                     <span class="focus-input" data-placeholder="Email"></span>
@@ -49,12 +49,20 @@
   methods: {
     async cadastro() {
       try {
+        if(this.email == "leo_r1089@hotmail.com" || this.email == "leonardo_wow@outlook.com")
+        {
+            this.papel = "Administrador";
+        }else
+        {
+            this.papel = "Usuario";
+        }
          await axios.post('usuarios/register', {
           nome: this.nome,
           papel: this.papel,
           email: this.email,
           senhaHash: this.password
         });
+        alert('Cadastro feito com sucesso!!');
         this.$router.push('/');
       } catch (error) {
         alert('Falha no cadastro: ' + error.response.data);

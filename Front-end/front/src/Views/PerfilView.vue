@@ -32,10 +32,10 @@
                         <span class="focus-input" data-placeholder="Nome"></span>
                     </div>
 
-                    <div class="wrap-input" :class="{'has-val' : papel !== ''}">
+                    <!--div class="wrap-input" :class="{'has-val' : papel !== ''}">
                         <input class="input" type="text" v-model="papel" required />
                         <span class="focus-input" data-placeholder="Papel"></span>
-                    </div>
+                    </div-->
                     <div class="wrap-input" :class="{'has-val' : password !== ''}">
                         <input class="input" type="password" v-model="password" required />
                         <span class="focus-input" data-placeholder="Senha"></span>
@@ -72,6 +72,7 @@ export default {
                 this.nome = usuario.nome;
                 this.papel = usuario.papel;
                 this.password = usuario.senhaHash;
+                alert('Alterações feitas com sucesso!!');
             } catch (error) {
                 alert('Erro ao buscar usuários: ' + error);
             }

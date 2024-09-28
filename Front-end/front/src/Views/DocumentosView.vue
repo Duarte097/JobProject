@@ -133,7 +133,6 @@ export default {
         async Download(idDocumento, nome) {
             try {
                 await DocumentosService.Download(idDocumento, nome);
-                alert('Download iniciado.');
             } catch (error) {
                 alert('Erro ao baixar documento: ' + error.message);
             }

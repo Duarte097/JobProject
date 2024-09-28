@@ -22,7 +22,7 @@ namespace ApiCrud.Usuario
                 return Results.Conflict("Já existe!");
 
             var senhaHash = UsuarioService.HashPassword(request.SenhaHash);
-
+    
             var novoUsuario = new UsuarioModel(
                 request.Nome,
                 request.Email,
