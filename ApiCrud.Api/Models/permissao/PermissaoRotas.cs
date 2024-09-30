@@ -38,5 +38,5 @@ public class PermissaoRotas : ControllerBase
         return Ok(permissao);
     }
 
-    // Outros endpoints para editar e remover permissões...
+
 }

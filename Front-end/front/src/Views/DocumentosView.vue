@@ -123,7 +123,7 @@ export default {
             try {
                 const sucesso = await DocumentosService.deletarDocumento(idDocumento);
                 if (sucesso) {
-                    this.documentos = await DocumentosService.obterDocumentos(); // Atualizar a lista de documentos
+                    this.documentos = await DocumentosService.obterDocumentos();
                     alert('Documento deletado com sucesso.');
                 }
             } catch (error) {

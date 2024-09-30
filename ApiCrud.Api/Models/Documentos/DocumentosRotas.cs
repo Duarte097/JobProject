@@ -66,7 +66,7 @@ namespace ApiCrud.Documentos
                     Caminho = filePath,
                     DataUpload = DateTime.UtcNow,
                     Status = Status.Ativo,
-                    UsuarioId = usuarioId // Associar o usuário logado
+                    UsuarioId = usuarioId 
                 };
 
                 _context.Documentos.Add(documento);

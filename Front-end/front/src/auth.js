@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-// Crie uma instância do Axios
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5086/', // Ajuste para a sua URL da API
+  baseURL: 'http://localhost:5086/', 
 });
 
-// Adicione um interceptor para incluir o token
+
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-// Adicione um interceptor para lidar com respostas
+
 axiosInstance.interceptors.response.use((response) => {
   return response;
 }, (error) => {

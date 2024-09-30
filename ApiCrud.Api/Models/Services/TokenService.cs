@@ -12,10 +12,10 @@ public static class TokenService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         
-        // Obtém a chave do arquivo de configuração
+     
         var key = configuration["Jwt:Key"];
         
-        // Verifica se a chave é nula ou vazia e lança uma exceção
+ 
         if (string.IsNullOrEmpty(key))
         {
             throw new ArgumentNullException(nameof(key), "A chave JWT não está configurada corretamente no appsettings.json.");

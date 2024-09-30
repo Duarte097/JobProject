@@ -60,11 +60,11 @@ namespace ApiCrud.Usuario
                 
                 if (!string.IsNullOrWhiteSpace(request.SenhaHash))
                 {
-                    usuario.SenhaHash = UsuarioService.HashPassword(request.SenhaHash); // Hash a nova senha
+                    usuario.SenhaHash = UsuarioService.HashPassword(request.SenhaHash); 
                 }
 
                 await context.SaveChangesAsync(ct);
-                return Results.Ok(new UsuarioDTO(usuario.Nome, usuario.Papel, usuario.SenhaHash)); // Retorne o DTO atualizado
+                return Results.Ok(new UsuarioDTO(usuario.Nome, usuario.Papel, usuario.SenhaHash)); 
             });
 
 

@@ -4,10 +4,10 @@ class UsuariosService{
         try {
             const userId = localStorage.getItem('idUsuarios'); 
             const response = await axios.get(`Usuarios/${userId}`);
-            return response.data; // Retorna os dados do usuário
+            return response.data; 
         } catch (error) {
             alert('Erro ao buscar usuários: ' + error.response.data);
-            throw error; // Lança o erro para ser tratado no componente
+            throw error; 
         }
     }
     async Alterar(){

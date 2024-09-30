@@ -5,7 +5,7 @@ using ApiCrud.Data;
 using ApiCrud.Models;
 using ApiCrud.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http; // Added for HttpContext
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,10 +21,10 @@ public static class LoginRotas
     {
         var rotasLogin = app.MapGroup("Usuarios");
 
-        // Define a POST route explicitly
+     
         rotasLogin.MapPost("login", async (AddLoginRequest request, AppDbContext context, IConfiguration configuration) =>
         {
-            // Verificar se o e-mail existe no banco de dados
+          
             var usuario = await context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (usuario == null)
@@ -32,20 +32,19 @@ public static class LoginRotas
                 return Results.NotFound("Usuário não encontrado");
             }
 
-            // Verificar se a senha está correta
+
             if (usuario.SenhaHash == null || !UsuarioService.VerificarSenha(request.SenhaHash, usuario.SenhaHash))
             {
                 return Results.Unauthorized();
             }
 
-            // Se as credenciais forem válidas, gerar o token JWT
+
             var token = TokenService.GenerateToken(request, configuration);
             usuario.SenhaHash = "";
 
             return Results.Ok(new { user = usuario, Token = token, usuarioId = usuario.IdUsuarios });
         });
 
-        // Define the routes after adding the login
         rotasLogin.MapGet("anonymous", [AllowAnonymous](HttpContext httpContext) => 
         {
             return "Anônimo";

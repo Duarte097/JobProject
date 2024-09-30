@@ -105,7 +105,7 @@
             onFileChange(event) {
                 const file = event.target.files[0];
                 if (file) {
-                    this.nomeDocumento = file.name; // Puxa o nome do arquivo selecionado
+                    this.nomeDocumento = file.name;
                     console.log("Arquivo selecionado:", this.nomeDocumento);
                 } else {
                     console.log("Nenhum arquivo selecionado");

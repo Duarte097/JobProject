@@ -20,7 +20,7 @@ const routes = [
     { path: '/perfil', component: PerfilView},
     { path: '/editar/:idDocumento', component: EditarDocumento},
     { path: '/home', component: HomeView, meta: { requiresAuth: true } },
-    // Outras rotas...
+
   ];
   
   const router = createRouter({
@@ -30,10 +30,9 @@ const routes = [
   
   router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token');
-    
-    // Verifique se a rota requer autenticação
+
     if (to.meta.requiresAuth && !token) {
-      // Se não estiver autenticado, redirecione para a página de login
+
       next({ path: '/' });
     } else {
       next();

@@ -9,9 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration; // Adicione esta linha
+var configuration = builder.Configuration; 
 
-// Add necessary services to the container
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AppDbContext>();
@@ -44,10 +44,10 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-// Build the application
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -61,20 +61,20 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-// Configure authentication and authorization
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Top-level route registrations for controllers
+
 app.MapControllers();
 
-// Add custom route registrations if necessary
+
 //app.AddRotasDocumentos();
 //app.DocumentosController();
 app.AddRotasUsuarios();
 //app.AddRotasPermissao();
 //app.AddRotasVersaoDoc();
-app.AddRotasLogin(); // Uncomment if using login
+app.AddRotasLogin(); 
 
 app.Run();
