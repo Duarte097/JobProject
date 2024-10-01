@@ -72,7 +72,6 @@ export default {
                 this.nome = usuario.nome;
                 this.papel = usuario.papel;
                 this.password = usuario.senhaHash;
-                alert('Alterações feitas com sucesso!!');
             } catch (error) {
                 alert('Erro ao buscar usuários: ' + error);
             }
@@ -85,6 +84,7 @@ export default {
                     papel: this.papel,
                     senhaHash: this.password
                 });
+                alert('Alterações feitas com sucesso!!');
                 this.$router.push('/home');
             } catch (error) {
                 alert('Falha no cadastro: ' + error.response.data);

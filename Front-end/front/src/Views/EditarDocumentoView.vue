@@ -131,8 +131,6 @@
                     this.selected = documento.data.categoria;
                     this.status = documento.status === 1 ? 'Inativo' : 'Ativo'; 
                     this.versao = documento.versao;
-
-                    alert('Alterações feitas com sucesso!!');
                 } catch (error) {
                     throw new Error('Erro ao buscar documentos: ' + error.documentos?.data || error.message);
                 }
@@ -149,14 +147,13 @@
                         Status: this.status === 'Ativo' ? 0 : 1,
                         UsuarioId: userId
                     };
-                    console.log(this.nomeDocumento, this.descricao, this.selected, this.status, userId);
                     await axios.put(`Documentos/editar/${idDocumento}`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         }
                     });
-
+                    alert('Alterações feitas com sucesso!!');
                     this.$router.push('/documentos');
                 } catch (error) {
                     alert('Falha no editar: ' + error.response.data);

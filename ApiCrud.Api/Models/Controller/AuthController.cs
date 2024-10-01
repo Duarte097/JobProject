@@ -31,11 +31,13 @@ public class AuthController : ControllerBase
             return NotFound("Usuário não encontrado");
         }
 
+        
         if (string.IsNullOrEmpty(usuario.SenhaHash) || string.IsNullOrEmpty(model.SenhaHash))
         {
             return Unauthorized("Credenciais inválidas");
         }
 
+        
         if (usuario == null || !UsuarioService.VerificarSenha(model.SenhaHash, usuario.SenhaHash))
         {
             return Unauthorized("Credenciais inválidas");
